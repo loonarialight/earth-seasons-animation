@@ -1,19 +1,6 @@
-@keyframes earthDrop {
-  from {
-    top: -120px;
-    opacity: 0;
-    transform: translateX(-50%) scale(0.6);
-  }
-  to {
-    top: 50%;
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(0.8);
-  }
-}
-
-.earth {
-  position: absolute;
-  left: 65%;
-  width: 80px;
-  animation: earthDrop 1.8s ease-out forwards;
+.scene {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: black;
 }

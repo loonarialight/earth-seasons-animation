@@ -1,0 +1,16 @@
+.earth-stage {
+  position: fixed;
+  inset: 0;
+  background: black;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.earth-wrapper {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  overflow: hidden;   /* 🔥 обрезка по кругу */
+}

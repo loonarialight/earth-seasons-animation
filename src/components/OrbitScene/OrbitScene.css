@@ -1,0 +1,49 @@
+.orbit-scene {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(#020014, #000);
+  overflow: hidden;
+}
+
+/* SUN */
+.sun {
+  position: absolute;
+  width: 140px;
+  z-index: 2;
+  filter: drop-shadow(0 0 30px rgba(255, 230, 120, 0.85));
+}
+
+/* EARTH */
+.earth {
+  position: absolute;
+  width: 70px;
+  z-index: 4;
+  transform-origin: center;
+}
+
+/* TRAIL DOT BASE */
+.trail-dot {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* VISIBLE DOT */
+.trail-dot.on {
+  background: white;
+  opacity: 0.9;
+}
+
+/* GAP */
+.trail-dot.off {
+  background: transparent;
+  opacity: 0;
+}
+.blackout {
+  position: absolute;
+  inset: 0;
+  background: black;
+  z-index: 999;
+}

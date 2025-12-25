@@ -1,0 +1,20 @@
+.earth-wrapper {
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.earth-img {
+  width: 300px;
+  height: 300px;
+  display: block;
+}
+.zoom-target {
+  transform: scale(0.25);
+  transition: transform 2s ease;
+}
+
+.zoom-target.zoom-in {
+  transform: scale(1);
+}
