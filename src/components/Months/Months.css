@@ -1,0 +1,33 @@
+.months-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  pointer-events: none;
+}
+
+.month-label {
+  position: absolute;
+  top: 48,5%;
+  left: 48,5%;
+  
+
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+
+  color: transparent;
+  transform-origin: center;
+
+  transition:
+    transform 0.5s ease,
+    color 0.5s ease;
+}
+
+.month-label.active {
+  color: violet;
+}

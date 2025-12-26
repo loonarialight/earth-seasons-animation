@@ -3,9 +3,6 @@ import assets from '../../assets/assets';
 import '../../styles/earthStage.css';
 import './SeasonsScene.css';
 
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-
 const SEASONS = [
   { title: 'ОСЕНЬ', img: assets.s1, cls: 'light-autumn' },
   { title: 'ЗИМА',  img: assets.s2, cls: 'light-winter' },
@@ -13,53 +10,53 @@ const SEASONS = [
   { title: 'ЛЕТО',  img: assets.s4, cls: 'light-summer' },
 ];
 
-export default function SeasonsScene() {
+export default function SeasonsScene({ onComplete }) {
   const [index, setIndex] = useState(0);
-  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    setVisible(false);
-    requestAnimationFrame(() => setVisible(true));
-  }, [index]);
+    // если дошли до ЛЕТА
+    if (index === SEASONS.length - 1) {
+      const endTimer = setTimeout(() => {
+        onComplete?.();
+      }, 3000); // ⏱ 3 секунды на ЛЕТЕ
 
-  const season = SEASONS[index];
+      return () => clearTimeout(endTimer);
+    }
+
+    // обычный переход (2 секунды)
+    const timer = setTimeout(() => {
+      setIndex(i => i + 1);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [index, onComplete]);
 
   return (
     <div className="earth-stage">
       <div className="season-layer">
-        <div className="season-title">{season.title}</div>
+        <div className="season-title">
+          {SEASONS[index].title}
+        </div>
 
         <div className="earth-wrapper">
+          {/* ЗЕМЛЯ */}
           <img
             src={assets.earth}
             alt="Earth"
             className="earth-img"
           />
 
-          <img
-            src={season.img}
-            alt="Season light"
-            className={`light-ellipse ${season.cls} ${visible ? 'visible' : ''}`}
-          />
+          {/* СЕЗОНЫ С НАКОПЛЕНИЕМ */}
+          {SEASONS.map((s, i) => (
+            <img
+              key={s.title}
+              src={s.img}
+              alt={s.title}
+              className={`light-ellipse ${s.cls} ${i <= index ? 'visible' : ''}`}
+            />
+          ))}
         </div>
       </div>
-
-      {/* КНОПКА MATERIAL UI */}
-      <Stack
-        direction="row"
-        spacing={2}
-        sx={{
-          position: 'fixed',
-          bottom: 24,
-        }}
-      >
-        <Button
-          variant="contained"
-          onClick={() => setIndex((index + 1) % SEASONS.length)}
-        >
-          Следующий сезон
-        </Button>
-      </Stack>
     </div>
   );
 }

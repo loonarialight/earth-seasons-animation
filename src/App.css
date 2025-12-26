@@ -4,3 +4,7 @@
   overflow: hidden;
   background: black;
 }
+:root {
+  --circle-center-top: 47%;
+  --circle-center-left: 48%;
+}

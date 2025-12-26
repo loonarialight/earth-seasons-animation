@@ -6,7 +6,7 @@ export function useSceneTimeline(stages = []) {
   const elapsedRef = useRef(0);
 
   useAnimationFrame((_, delta) => {
-    // если дошли до последней сцены — стоп
+    // если сцена без таймера — больше не двигаемся
     if (stage >= stages.length) return;
 
     elapsedRef.current += delta;
