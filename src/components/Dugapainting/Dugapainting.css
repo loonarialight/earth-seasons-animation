@@ -1,0 +1,69 @@
+/* ===== ДУГИ — ВЕРХНИЙ СЛОЙ (ПОВЕРХ ЦИФР) ===== */
+.duga-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 35; /* 👈 выше, чем у numbers-overlay (30) */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  pointer-events: none;
+}
+
+.duga-circle {
+  position: relative;
+  width: 420px;
+  height: 420px;
+}
+
+.duga {
+  position: absolute;
+  inset: 0;
+  width: 50%;
+  height: 50%;
+  z-index: 10;
+}
+
+/* ОСЕНЬ */
+.duga-1 {
+  top: 0;
+  left: 0;
+  transform: translateX(209px);
+}
+
+/* ЗИМА */
+.duga-2 {
+  top: 0;
+  right: 0;
+  transform: translate(209px, 209px);
+}
+
+/* ВЕСНА */
+.duga-3 {
+  bottom: 0;
+  right: 0;
+  transform: translate(0px, 209px);
+}
+
+/* ЛЕТО */
+.duga-4 {
+  bottom: 0;
+  left: 0;
+  transform: translateY(209px,209px); /* исправил: только один параметр */
+}
+
+/* ===== ЦИФРЫ — НИЖЕ ДУГ ===== */
+.numbers-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 30; /* ниже дуг */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  pointer-events: none;
+}
+
+/* остальное без изменений */

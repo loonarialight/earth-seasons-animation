@@ -8,6 +8,7 @@ import Numbers from './components/Numbers/Numbers';
 import Months from './components/Months/Months';
 import ArcHighlight from './components/ArcHighlight/ArcHighlight';
 import { useSceneTimeline } from './hooks/useSceneTimeline';
+import DugaPainting from './components/Dugapainting/Dugapainting';
 
 import questionData from './mock/question-786.json';
 console.log('JSON from backend:', questionData.question);
@@ -35,22 +36,23 @@ function App() {
       )}
 
       {showNumbers && (
-      <Numbers
-        data={monthsData}
-        onComplete={() => setShowArc(true)}
-      />
-      )}
+  <Numbers
+    data={monthsData}
+    onComplete={() => setShowArc(true)}
+  />
+)}
 
-      {showArc && (
-        <ArcHighlight
-          count={12}
-          onComplete={() => setShowMonths(true)}
-        />
-      )}
+{showArc && (
+  <DugaPainting
+    data={monthsData}
+    onComplete={() => setShowMonths(true)}
+  />
+)}
 
-      {showMonths && (
-        <Months data={monthsData} />
-      )}
+{showMonths && (
+  <Months data={monthsData} />
+)}
+
     </div>
   );
 }
