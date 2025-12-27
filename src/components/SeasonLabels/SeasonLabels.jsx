@@ -8,11 +8,9 @@ const TITLES = {
 };
 
 export default function SeasonLabels({ season }) {
-  if (!season) return null;
-
   return (
-    <div className="season-label">
-      {TITLES[season]}
-    </div>
+    <span className="season-text">
+      {season ? TITLES[season] : ''}
+    </span>
   );
 }

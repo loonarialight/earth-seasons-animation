@@ -5,7 +5,14 @@ const COLORS = {
   autumn: '#FEE58A',
 };
 
-// строго по часовой стрелке
+const TITLES = {
+  winter: 'ЗИМА',
+  spring: 'ВЕСНА',
+  summer: 'ЛЕТО',
+  autumn: 'ОСЕНЬ',
+};
+
+// 4 сектора по часовой стрелке
 const SECTORS = [
   { season: 'winter', start: -90, end: 0 },
   { season: 'spring', start: 0, end: 90 },
@@ -13,8 +20,8 @@ const SECTORS = [
   { season: 'autumn', start: 180, end: 270 },
 ];
 
-function polar(cx, cy, r, angle) {
-  const a = (angle * Math.PI) / 180;
+function polar(cx, cy, r, angleDeg) {
+  const a = (angleDeg * Math.PI) / 180;
   return {
     x: cx + r * Math.cos(a),
     y: cy + r * Math.sin(a),
@@ -38,6 +45,7 @@ export default function EarthSeasonsOverlay({
   visibleCount = 0,
 }) {
   const c = size / 2;
+  const textRadius = size * 0.35; // 🔹 глубина текста внутри сектора
 
   return (
     <svg
@@ -47,17 +55,41 @@ export default function EarthSeasonsOverlay({
       style={{
         position: 'absolute',
         inset: 0,
-        borderRadius: '50%',
         pointerEvents: 'none',
       }}
     >
-      {SECTORS.slice(0, visibleCount).map(s => (
-        <path
-          key={s.season}
-          d={sectorPath(c, c, c, s.start, s.end)}
-          fill={COLORS[s.season]}
-        />
-      ))}
+      {SECTORS.slice(0, visibleCount).map(s => {
+        const midAngle = (s.start + s.end) / 2;
+        const pos = polar(c, c, textRadius, midAngle);
+
+        return (
+          <g key={s.season}>
+            {/* СЕКТОР */}
+            <path
+              d={sectorPath(c, c, c, s.start, s.end)}
+              fill={COLORS[s.season]}
+            />
+
+            {/* ТЕКСТ ВНУТРИ СЕКТОРА */}
+            <text
+              x={pos.x}
+              y={pos.y}
+              fill="#ffffff"
+              fontSize="22"
+              fontWeight="600"
+              textAnchor="middle"
+              dominantBaseline="middle"
+              transform={`rotate(${midAngle + 90}, ${pos.x}, ${pos.y})`}
+              style={{
+                fontFamily: 'Inter, sans-serif',
+                letterSpacing: '0.08em',
+              }}
+            >
+              {TITLES[s.season]}
+            </text>
+          </g>
+        );
+      })}
     </svg>
   );
 }
