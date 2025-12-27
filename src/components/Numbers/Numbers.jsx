@@ -16,6 +16,7 @@ export default function Numbers({ data, onComplete }) {
 
   const [activeStep, setActiveStep] = useState(0);
   const [finalPhase, setFinalPhase] = useState(false);
+  const [showSeasonRings, setShowSeasonRings] = useState(false);
 
   // 🔥 порядок анимации: 1 → 12 из JSON
   const animationOrder = useMemo(() => {
@@ -29,6 +30,12 @@ export default function Numbers({ data, onComplete }) {
     if (activeStep >= animationOrder.length) {
       setTimeout(() => {
         setFinalPhase(true);
+
+        // 🌈 запуск анимации PNG-колец
+        setTimeout(() => {
+          setShowSeasonRings(true);
+        }, 200);
+
         onComplete?.();
       }, 600);
       return;
@@ -51,11 +58,23 @@ export default function Numbers({ data, onComplete }) {
           innerRadius={170}
         />
 
-        {/* 🌈 КОЛЬЦА СЕЗОНОВ */}
-        <img src={winter} className="ring ring-1" />
-        <img src={spring} className="ring ring-2" />
-        <img src={summer} className="ring ring-3" />
-        <img src={autumn} className="ring ring-4" />
+        {/* 🌈 PNG-КОЛЬЦА СЕЗОНОВ (С АНИМАЦИЕЙ) */}
+        <img
+          src={winter}
+          className={`ring ring-1 ${showSeasonRings ? 'ring-visible' : ''}`}
+        />
+        <img
+          src={spring}
+          className={`ring ring-2 ${showSeasonRings ? 'ring-visible' : ''}`}
+        />
+        <img
+          src={summer}
+          className={`ring ring-3 ${showSeasonRings ? 'ring-visible' : ''}`}
+        />
+        <img
+          src={autumn}
+          className={`ring ring-4 ${showSeasonRings ? 'ring-visible' : ''}`}
+        />
 
         {/* 🔢 ЦИФРЫ */}
         {visualOrder.map((num, i) => {

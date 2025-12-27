@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+
 function polar(cx, cy, r, angle) {
   const a = (angle - 90) * Math.PI / 180;
   return {
@@ -27,6 +29,12 @@ export default function WhiteRing({
   innerRadius = 170,
 }) {
   const c = size / 2;
+  const [visible, setVisible] = useState(false);
+
+  // ▶️ запуск анимации при маунте
+  useEffect(() => {
+    requestAnimationFrame(() => setVisible(true));
+  }, []);
 
   return (
     <svg
@@ -37,7 +45,13 @@ export default function WhiteRing({
         position: 'absolute',
         top: '50%',
         left: '50%',
-        transform: 'translate(-50%, -50%)',
+        transform: `
+          translate(-50%, -50%)
+          scale(${visible ? 1 : 0})
+        `,
+        opacity: visible ? 0.95 : 0,
+        transformOrigin: 'center center',
+        transition: 'transform 0.8s ease-out, opacity 0.6s ease-out',
         pointerEvents: 'none',
         zIndex: 1,
       }}
@@ -51,7 +65,6 @@ export default function WhiteRing({
             key={i}
             d={ringSegment(c, c, outerRadius, innerRadius, start, end)}
             fill="#ffffff"
-            opacity="0.95"
           />
         );
       })}

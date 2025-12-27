@@ -1,13 +1,13 @@
 .earth-wrapper {
-  width: 300px;
-  height: 300px;
+  width: 360px;
+  height: 360px;
   border-radius: 50%;
   overflow: hidden;
 }
 
 .earth-img {
-  width: 300px;
-  height: 300px;
+  width: 360px;
+  height: 360px;
   display: block;
 }
 .zoom-target {
