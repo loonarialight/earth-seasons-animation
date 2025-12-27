@@ -1,10 +1,15 @@
 import { useEffect, useMemo, useState } from 'react';
 import './Numbers.css';
 
+import winter from '../../assets/winter.png';
+import spring from '../../assets/spring.png';
+import summer from '../../assets/summer.png';
+import autumn from '../../assets/autumn.png';
 import p1 from '../../assets/p1.png';
 import p2 from '../../assets/p2.png';
 import p3 from '../../assets/p3.png';
 import p4 from '../../assets/p4.png';
+
 
 // визуальный порядок (как часы)
 const visualOrder = [9,10,11,12,1,2,3,4,5,6,7,8];
@@ -43,12 +48,17 @@ export default function Numbers({ data, onComplete }) {
   return (
     <div className="numbers-overlay">
       <div className="numbers-circle">
+        {/* ПОДЛОЖКИ */}
+        <img src={p1} className="podlozhka podlozhka-1" />
+        <img src={p2} className="podlozhka podlozhka-2" />
+        <img src={p3} className="podlozhka podlozhka-3" />
+        <img src={p4} className="podlozhka podlozhka-4" />
 
         {/* КОЛЬЦО */}
-        <img src={p1} className="ring ring-1" />
-        <img src={p2} className="ring ring-2" />
-        <img src={p3} className="ring ring-3" />
-        <img src={p4} className="ring ring-4" />
+        <img src={winter} className="ring ring-1" />
+        <img src={spring} className="ring ring-2" />
+        <img src={summer} className="ring ring-3" />
+        <img src={autumn} className="ring ring-4" />
 
         {/* 🔢 ЦИФРЫ ИЗ JSON */}
         {visualOrder.map((num, i) => {
@@ -67,11 +77,13 @@ export default function Numbers({ data, onComplete }) {
                 ${finalPhase ? 'final' : ''}
               `}
               style={{
-                transform: `
-                  rotate(${angle}deg)
-                  translateY(-${BASE_RADIUS + (finalPhase ? FINAL_SHIFT : 0)}px)
-                `,
-              }}
+              transform: `
+                rotate(${angle}deg)
+                translateY(-${BASE_RADIUS + (finalPhase ? FINAL_SHIFT : 0)}px)
+                scale(${finalPhase ? 1.05 : 1})
+              `,
+            }}
+
             >
               {num}
             </div>

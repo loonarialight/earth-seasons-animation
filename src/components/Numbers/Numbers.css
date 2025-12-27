@@ -9,47 +9,87 @@
 
   pointer-events: none;
 }
-
-.numbers-circle {
-  position: relative;
-  width: 420px;
-  height: 420px;
-}
-
-/* ===== СЕГМЕНТЫ ===== */
-.ring {
+/* ===== ПОДЛОЖКА (СЕГМЕНТЫ) ===== */
+.podlozhka {
   position: absolute;
   inset: 0;
   width: 50%;
   height: 50%;
+  object-fit: cover; /* чтобы изображения заполняли область без искажений */
+  pointer-events: none;
 }
 
 /* ОСЕНЬ */
-.ring-1 {
+.podlozhka-1 {
   top: 0;
   left: 0;
   transform: translateX(209px);
 }
 
 /* ЗИМА */
-.ring-2 {
+.podlozhka-2 {
   top: 0;
   right: 0;
   transform: translate(209px, 209px);
 }
 
 /* ВЕСНА */
-.ring-3 {
+.podlozhka-3 {
   bottom: 0;
   right: 0;
   transform: translate(0px, 209px);
 }
 
 /* ЛЕТО */
+.podlozhka-4 {
+  bottom: 0;
+  left: 0;
+  transform: translateY(209px, 209px); /* исправил: только один параметр */
+}
+
+/* ===== СЕГМЕНТЫ ===== */ .ring { position: absolute; inset: 0; width: 50%; height: 50%; } /* ОСЕНЬ */ .ring-1 { top: 0; left: 0; transform: translateX(209px); } /* ЗИМА */ .ring-2 { top: 0; right: 0; transform: translate(209px, 209px); } /* ВЕСНА */ .ring-3 { bottom: 0; right: 0; transform: translate(0px, 209px); } /* ЛЕТО */ .ring-4 { bottom: 0; left: 0; transform: translateY(209px, 209px); }
+.numbers-circle {
+  position: relative;
+  width: 420px;
+  height: 420px;
+}
+
+/* ===== КОЛЬЦО ИЗ 4 СЕЗОНОВ ===== */
+.ring {
+  position: absolute;
+  inset: 0;
+  width: 50%;
+  height: 50%;
+  object-fit: cover; /* важно: чтобы изображение заполняло область без искажений */
+  pointer-events: none;
+}
+
+/* ОСЕНЬ — левый верхний квадрант */
+.ring-1 {
+  top: 0;
+  left: 0;
+  transform: translateY(100px) translateX(110px) /* сдвиг вправо на половину ширины круга (420/2 = 210) */
+}
+
+/* ЗИМА — правый верхний квадрант */
+.ring-2 {
+  top: 0;
+  right: 0;
+  transform: translateY(110px) translateX(110px) /* вправо и вниз */
+}
+
+/* ВЕСНА — правый нижний квадрант */
+.ring-3 {
+  bottom: 0;
+  right: 0;
+  transform: translateY(110px) translateX(100px); /* только вниз */
+}
+
+/* ЛЕТО — левый нижний квадрант */
 .ring-4 {
   bottom: 0;
   left: 0;
-  transform: translateY(209px, 209px);
+  transform: translateY(100px) translateX(100px); /* только вверх (от нижнего края) */
 }
 
 /* ===== ЦИФРЫ ===== */
@@ -61,23 +101,29 @@
   font-size: 22px;
   font-weight: 700;
 
-  color: #0a2238; /* обычный цвет */
+  color: #0a2238;
   opacity: 0;
 
   transform-origin: center;
   user-select: none;
 
   transition:
-    opacity 0.4s ease,
-    transform 0.6s ease,
-    color 0.6s ease;
+    opacity 0.5s ease,
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.6s ease,
+    text-shadow 0.6s ease;
 }
+
 
 .number.visible {
   opacity: 1;
 }
 
-/* 🔥 ФИНАЛ — ДВИЖЕНИЕ + БЕЛЫЙ ЦВЕТ */
+
 .number.final {
   color: #ffffff;
+  text-shadow:
+    0 0 6px rgba(255,255,255,0.6),
+    0 0 14px rgba(185,230,255,0.6),
+    0 0 28px rgba(0,164,255,0.5);
 }
