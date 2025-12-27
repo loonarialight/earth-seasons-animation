@@ -41,11 +41,12 @@ function sectorPath(cx, cy, r, start, end) {
 }
 
 export default function EarthSeasonsOverlay({
-  size = 360,
+  size = 320,          // ✅ РОВНО КАК ЗЕМЛЯ
   visibleCount = 0,
 }) {
-  const c = size / 2;
-  const textRadius = size * 0.35; // 🔹 глубина текста внутри сектора
+  const c = size / 2;          // 160
+  const sectorRadius = c;      // радиус четвертей
+  const textRadius = size * 0.32; // текст чуть глубже внутрь
 
   return (
     <svg
@@ -66,16 +67,16 @@ export default function EarthSeasonsOverlay({
           <g key={s.season}>
             {/* СЕКТОР */}
             <path
-              d={sectorPath(c, c, c, s.start, s.end)}
+              d={sectorPath(c, c, sectorRadius, s.start, s.end)}
               fill={COLORS[s.season]}
             />
 
-            {/* ТЕКСТ ВНУТРИ СЕКТОРА */}
+            {/* НАЗВАНИЕ СЕЗОНА */}
             <text
               x={pos.x}
               y={pos.y}
               fill="#ffffff"
-              fontSize="22"
+              fontSize="21"
               fontWeight="600"
               textAnchor="middle"
               dominantBaseline="middle"
@@ -83,6 +84,7 @@ export default function EarthSeasonsOverlay({
               style={{
                 fontFamily: 'Inter, sans-serif',
                 letterSpacing: '0.08em',
+                userSelect: 'none',
               }}
             >
               {TITLES[s.season]}

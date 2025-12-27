@@ -6,12 +6,12 @@
 
 .earth-wrapper {
   position: relative;   /* 🔑 БЕЗ ЭТОГО НИЧЕГО НЕ БУДЕТ */
-  width: 360px;
-  height: 360px;
+  width: 320px;
+  height: 320px;
 }
 
 .earth-img {
-  width: 360px;
-  height: 360px;
+  width: 320px;
+  height: 320px;
   display: block;
 }

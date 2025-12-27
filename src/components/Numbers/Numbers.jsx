@@ -1,109 +1,94 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './Numbers.css';
-import WhiteRing from '../WhiteRing/WhiteRing';
 
-import winter from '../../assets/winter.png';
-import spring from '../../assets/spring.png';
-import summer from '../../assets/summer.png';
-import autumn from '../../assets/autumn.png';
+const TOTAL = 12;
+const STEP_DURATION = 250;
 
-// визуальный порядок (как часы)
-const visualOrder = [9,10,11,12,1,2,3,4,5,6,7,8];
+function polar(cx, cy, r, angle) {
+  const a = (angle - 90) * Math.PI / 180;
+  return {
+    x: cx + r * Math.cos(a),
+    y: cy + r * Math.sin(a),
+  };
+}
 
-export default function Numbers({ data, onComplete }) {
-  const BASE_RADIUS = 185;
-  const FINAL_SHIFT = 50;
+function ringSegment(cx, cy, rOuter, rInner, start, end) {
+  const p1 = polar(cx, cy, rOuter, end);
+  const p2 = polar(cx, cy, rOuter, start);
+  const p3 = polar(cx, cy, rInner, start);
+  const p4 = polar(cx, cy, rInner, end);
 
-  const [activeStep, setActiveStep] = useState(0);
-  const [finalPhase, setFinalPhase] = useState(false);
-  const [showSeasonRings, setShowSeasonRings] = useState(false);
+  return `
+    M ${p1.x} ${p1.y}
+    A ${rOuter} ${rOuter} 0 0 0 ${p2.x} ${p2.y}
+    L ${p3.x} ${p3.y}
+    A ${rInner} ${rInner} 0 0 1 ${p4.x} ${p4.y}
+    Z
+  `;
+}
 
-  // 🔥 порядок анимации: 1 → 12 из JSON
-  const animationOrder = useMemo(() => {
-    return [...data]
-      .sort((a, b) => a.Number - b.Number)
-      .map(item => item.Number);
-  }, [data]);
+export default function Numbers({ onComplete }) {
+  const [step, setStep] = useState(0);
 
-  // ⏱ таймлайн появления цифр
+  const size = 420;
+  const c = size / 2;
+  const outerRadius = 210;
+  const innerRadius = 160;
+
   useEffect(() => {
-    if (activeStep >= animationOrder.length) {
-      setTimeout(() => {
-        setFinalPhase(true);
-
-        // 🌈 запуск анимации PNG-колец
-        setTimeout(() => {
-          setShowSeasonRings(true);
-        }, 200);
-
-        onComplete?.();
-      }, 600);
+    if (step >= TOTAL) {
+      onComplete?.();
       return;
     }
 
-    const timer = setTimeout(() => {
-      setActiveStep(s => s + 1);
-    }, 250);
+    const t = setTimeout(() => {
+      setStep(s => s + 1);
+    }, STEP_DURATION);
 
-    return () => clearTimeout(timer);
-  }, [activeStep, animationOrder.length, onComplete]);
+    return () => clearTimeout(t);
+  }, [step, onComplete]);
 
   return (
     <div className="numbers-overlay">
-      <div className="numbers-circle">
+      <svg
+        className="numbers-circle"
+        width={size}
+        height={size}
+        viewBox={`0 0 ${size} ${size}`}
+      >
+        {Array.from({ length: step }).map((_, i) => {
+          const start = i * 30;
+          const end = start + 30;
 
-        {/* 🤍 БЕЛАЯ SVG-ПОДЛОЖКА */}
-        <WhiteRing
-          outerRadius={210}
-          innerRadius={170}
-        />
-
-        {/* 🌈 PNG-КОЛЬЦА СЕЗОНОВ (С АНИМАЦИЕЙ) */}
-        <img
-          src={winter}
-          className={`ring ring-1 ${showSeasonRings ? 'ring-visible' : ''}`}
-        />
-        <img
-          src={spring}
-          className={`ring ring-2 ${showSeasonRings ? 'ring-visible' : ''}`}
-        />
-        <img
-          src={summer}
-          className={`ring ring-3 ${showSeasonRings ? 'ring-visible' : ''}`}
-        />
-        <img
-          src={autumn}
-          className={`ring ring-4 ${showSeasonRings ? 'ring-visible' : ''}`}
-        />
-
-        {/* 🔢 ЦИФРЫ */}
-        {visualOrder.map((num, i) => {
-          const angle = i * 30 - 90 + 15;
-          const isVisible = animationOrder
-            .slice(0, activeStep)
-            .includes(num);
+          const mid = start + 15;
+          const textPos = polar(c, c, outerRadius + 22, mid);
 
           return (
-            <div
-              key={num}
-              className={`
-                number
-                ${isVisible ? 'visible' : ''}
-                ${finalPhase ? 'final' : ''}
-              `}
-              style={{
-                transform: `
-                  rotate(${angle}deg)
-                  translateY(-${BASE_RADIUS + (finalPhase ? FINAL_SHIFT : 0)}px)
-                  scale(${finalPhase ? 1.05 : 1})
-                `,
-              }}
-            >
-              {num}
-            </div>
+            <g key={i}>
+              {/* ДУГА 1/12 */}
+              <path
+                d={ringSegment(c, c, outerRadius, innerRadius, start, end)}
+                fill="#ffffff"
+                stroke="#000000"
+                strokeWidth="2"
+              />
+
+              {/* ЦИФРА */}
+              <text
+                x={textPos.x}
+                y={textPos.y}
+                fill="#000000"
+                fontSize="16"
+                fontWeight="700"
+                textAnchor="middle"
+                dominantBaseline="middle"
+              >
+                {i + 1}
+              </text>
+            </g>
           );
         })}
-      </div>
+      </svg>
     </div>
   );
 }
