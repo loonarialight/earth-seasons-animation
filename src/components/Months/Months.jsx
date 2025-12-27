@@ -1,67 +1,72 @@
-import { useEffect, useState } from 'react';
-import './Months.css';
+  import { useEffect, useMemo, useState } from 'react';
+  import './Months.css';
 
-const MONTHS = [
-  'СЕНТЯБРЬ','ОКТЯБРЬ','НОЯБРЬ','ДЕКАБРЬ',
-  'ЯНВАРЬ','ФЕВРАЛЬ','МАРТ','АПРЕЛЬ',
-  'МАЙ','ИЮНЬ','ИЮЛЬ','АВГУСТ',
-];
+  // порядок РАСПОЛОЖЕНИЯ на круге (как цифры часов)
+  const visualOrder = [9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8];
 
-// визуальный порядок (как цифры)
-const visualOrder = [9,10,11,12,1,2,3,4,5,6,7,8];
+  export default function Months({ data }) {
+    const BASE_RADIUS = 155;
+    const LIFT = 27;
 
-// логический порядок анимации
-const animationOrder = [
-  'ЯНВАРЬ','ФЕВРАЛЬ','МАРТ','АПРЕЛЬ',
-  'МАЙ','ИЮНЬ','ИЮЛЬ','АВГУСТ',
-  'СЕНТЯБРЬ','ОКТЯБРЬ','НОЯБРЬ','ДЕКАБРЬ',
-];
+    const [step, setStep] = useState(0);
 
-export default function Months() {
-  const BASE_RADIUS = 158;
-  const LIFT = 28;
-  const [step, setStep] = useState(0);
+    // 🛡 защита от undefined
+    const safeData = Array.isArray(data) ? data : [];
 
-  useEffect(() => {
-    if (step >= animationOrder.length) return;
+    // 🔥 порядок анимации: январь → декабрь
+    const animationOrder = useMemo(() => {
+      return [...safeData].sort((a, b) => a.Number - b.Number);
+    }, [safeData]);
 
-    const timer = setTimeout(() => {
-      setStep(s => s + 1);
-    }, 400);
+    // ⏱ таймлайн появления месяцев
+    useEffect(() => {
+      if (step >= animationOrder.length) return;
 
-    return () => clearTimeout(timer);
-  }, [step]);
+      const timer = setTimeout(() => {
+        setStep(s => s + 1);
+      }, 400);
 
-  return (
-    <div className="months-overlay">
-      {visualOrder.map((num, i) => {
-        // индекс месяца в визуальном массиве
-        const monthIndex = (num + 3) % 12;
-        const monthName = MONTHS[monthIndex];
+      return () => clearTimeout(timer);
+    }, [step, animationOrder.length]);
 
-        // 🔥 главный фикс:
-        const isActive =
-          animationOrder
-            .slice(0, step)
-            .includes(monthName);
+    if (safeData.length === 0) return null;
 
-        const angle = i * 30 - 90 + 15;
+    return (
+      <div className="months-overlay">
+        {visualOrder.map((num, i) => {
+          const monthObj = safeData.find(m => m.Number === num);
+          if (!monthObj) return null;
 
-        return (
-          <div
-            key={num}
-            className={`month-label ${isActive ? 'active' : ''}`}
-            style={{
-              transform: `
-                rotate(${angle}deg)
-                translateY(-${BASE_RADIUS + (isActive ? LIFT : 0)}px)
-              `,
-            }}
-          >
-            {monthName}
-          </div>
-        );
-      })}
-    </div>
-  );
-}
+          const animationIndex = animationOrder.findIndex(
+            m => m.Number === monthObj.Number
+          );
+
+          const isActive = animationIndex < step;
+          const angle = i * 30 - 90 + 15;
+
+          return (
+            <div
+              key={num}
+              className={`month-item ${isActive ? 'active' : ''}`}
+              style={{
+                transform: `
+                  rotate(${angle}deg)
+                  translateY(-${BASE_RADIUS + (isActive ? LIFT : 0)}px)
+                `,
+              }}
+            >
+              {/* 📝 ТЕКСТ МЕСЯЦА */}
+              <div
+                className="month-text"
+                style={{
+                  // transform: `rotate(${-angle}deg)`,
+                }}
+              >
+                {monthObj.Text.toUpperCase()}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }

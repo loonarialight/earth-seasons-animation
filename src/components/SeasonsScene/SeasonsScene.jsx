@@ -1,53 +1,71 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import assets from '../../assets/assets';
 import '../../styles/earthStage.css';
 import './SeasonsScene.css';
 
-const SEASONS = [
-  { title: 'ОСЕНЬ', img: assets.s1, cls: 'light-autumn' },
-  { title: 'ЗИМА',  img: assets.s2, cls: 'light-winter' },
-  { title: 'ВЕСНА', img: assets.s3, cls: 'light-spring' },
-  { title: 'ЛЕТО',  img: assets.s4, cls: 'light-summer' },
-];
+const SEASON_META = {
+  winter: { title: 'ЗИМА', img: assets.s2, cls: 'light-winter' },
+  spring: { title: 'ВЕСНА', img: assets.s3, cls: 'light-spring' },
+  summer: { title: 'ЛЕТО', img: assets.s4, cls: 'light-summer' },
+  autumn: { title: 'ОСЕНЬ', img: assets.s1, cls: 'light-autumn' },
+};
 
-export default function SeasonsScene({ onComplete }) {
+// 🔥 правильный порядок года
+const SEASON_ORDER = ['autumn', 'winter', 'spring', 'summer'];
+
+const STEP_DURATION = 2000;
+const FINAL_DURATION = 3000;
+
+export default function SeasonsScene({ data, onComplete }) {
   const [index, setIndex] = useState(0);
+  const completedRef = useRef(false);
+
+  // ✅ сезоны: порядок фиксированный, но только те, что есть в JSON
+  const seasons = useMemo(() => {
+    const available = new Set(data.map(m => m.Season));
+    return SEASON_ORDER
+      .filter(season => available.has(season))
+      .map(season => SEASON_META[season]);
+  }, [data]);
 
   useEffect(() => {
-    // если дошли до ЛЕТА
-    if (index === SEASONS.length - 1) {
-      const endTimer = setTimeout(() => {
-        onComplete?.();
-      }, 3000); // ⏱ 3 секунды на ЛЕТЕ
+    if (!seasons.length) return;
 
-      return () => clearTimeout(endTimer);
+    if (index === seasons.length - 1) {
+      if (completedRef.current) return;
+      completedRef.current = true;
+
+      const timer = setTimeout(() => {
+        onComplete?.();
+      }, FINAL_DURATION);
+
+      return () => clearTimeout(timer);
     }
 
-    // обычный переход (2 секунды)
     const timer = setTimeout(() => {
       setIndex(i => i + 1);
-    }, 2000);
+    }, STEP_DURATION);
 
     return () => clearTimeout(timer);
-  }, [index, onComplete]);
+  }, [index, seasons, onComplete]);
+
+  if (!seasons.length) return null;
 
   return (
     <div className="earth-stage">
       <div className="season-layer">
         <div className="season-title">
-          {SEASONS[index].title}
+          {seasons[index].title}
         </div>
 
         <div className="earth-wrapper">
-          {/* ЗЕМЛЯ */}
           <img
             src={assets.earth}
             alt="Earth"
             className="earth-img"
           />
 
-          {/* СЕЗОНЫ С НАКОПЛЕНИЕМ */}
-          {SEASONS.map((s, i) => (
+          {seasons.map((s, i) => (
             <img
               key={s.title}
               src={s.img}
