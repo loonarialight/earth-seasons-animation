@@ -2,12 +2,9 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  z-index: 40;
 }
 
 .numbers-circle {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  inset: 0;
 }

@@ -34,6 +34,7 @@ function ringSegment(cx, cy, rOuter, rInner, start, end) {
     Z
   `;
 }
+
 export default function SeasonsRing({
   size = 420,
   outerRadius = 200,
@@ -48,9 +49,7 @@ export default function SeasonsRing({
       viewBox={`0 0 ${size} ${size}`}
       style={{
         position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
+        inset: 0,              // ✅ ЕДИНСТВЕННО ПРАВИЛЬНО
         pointerEvents: 'none',
       }}
     >

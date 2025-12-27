@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import './Numbers.css';
 
-const TOTAL = 12;
-const STEP_DURATION = 250;
+const visualOrder = [9,10,11,12,1,2,3,4,5,6,7,8];
 
 function polar(cx, cy, r, angle) {
   const a = (angle - 90) * Math.PI / 180;
@@ -27,68 +26,83 @@ function ringSegment(cx, cy, rOuter, rInner, start, end) {
   `;
 }
 
-export default function Numbers({ onComplete }) {
-  const [step, setStep] = useState(0);
+export default function Numbers({ data, onComplete }) {
+  const [activeStep, setActiveStep] = useState(0);
 
-  const size = 420;
-  const c = size / 2;
-  const outerRadius = 210;
-  const innerRadius = 160;
+  const SIZE = 420;
+  const C = SIZE / 2;
+
+  const ARC_OUTER = 210;
+  const ARC_INNER = 170;
+  const DIGIT_RADIUS = 225;
+
+  const animationOrder = useMemo(
+    () => [...data].sort((a,b) => a.Number - b.Number).map(x => x.Number),
+    [data]
+  );
 
   useEffect(() => {
-    if (step >= TOTAL) {
+    if (activeStep >= animationOrder.length) {
       onComplete?.();
       return;
     }
-
-    const t = setTimeout(() => {
-      setStep(s => s + 1);
-    }, STEP_DURATION);
-
+    const t = setTimeout(() => setActiveStep(s => s + 1), 250);
     return () => clearTimeout(t);
-  }, [step, onComplete]);
+  }, [activeStep, animationOrder.length, onComplete]);
 
   return (
     <div className="numbers-overlay">
-      <svg
-        className="numbers-circle"
-        width={size}
-        height={size}
-        viewBox={`0 0 ${size} ${size}`}
-      >
-        {Array.from({ length: step }).map((_, i) => {
-          const start = i * 30;
-          const end = start + 30;
+      <div className="numbers-circle">
 
-          const mid = start + 15;
-          const textPos = polar(c, c, outerRadius + 22, mid);
+        {/* ДУГИ */}
+        <svg
+          width={SIZE}
+          height={SIZE}
+          viewBox={`0 0 ${SIZE} ${SIZE}`}
+          style={{ position: 'absolute', inset: 0 }}
+        >
+          {visualOrder.map((num, i) => {
+            if (!animationOrder.slice(0, activeStep).includes(num)) return null;
 
-          return (
-            <g key={i}>
-              {/* ДУГА 1/12 */}
+            const start = i * 30;
+            const end = start + 30;
+
+            return (
               <path
-                d={ringSegment(c, c, outerRadius, innerRadius, start, end)}
-                fill="#ffffff"
-                stroke="#000000"
+                key={num}
+                d={ringSegment(C, C, ARC_OUTER, ARC_INNER, start, end)}
+                fill="#fff"
+                stroke="#000"
                 strokeWidth="2"
               />
+            );
+          })}
+        </svg>
 
-              {/* ЦИФРА */}
-              <text
-                x={textPos.x}
-                y={textPos.y}
-                fill="#000000"
-                fontSize="16"
-                fontWeight="700"
-                textAnchor="middle"
-                dominantBaseline="middle"
-              >
-                {i + 1}
-              </text>
-            </g>
+        {/* ЦИФРЫ — СТРОГО НАД ДУГАМИ */}
+        {visualOrder.map((num, i) => {
+          if (!animationOrder.slice(0, activeStep).includes(num)) return null;
+
+          const angle = i * 30 - 90 + 15;
+
+          return (
+            <div
+              key={num}
+              className="number visible"
+              style={{
+                transform: `
+                  rotate(${angle}deg)
+                  translateY(-${DIGIT_RADIUS}px)
+                `,
+                color: '#000',
+                fontWeight: 700,
+              }}
+            >
+              {num}
+            </div>
           );
         })}
-      </svg>
+      </div>
     </div>
   );
 }
