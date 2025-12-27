@@ -1,20 +1,20 @@
 const COLORS = {
-  winter: '#bfe7ff',
-  spring: '#ffd1e6',
-  summer: '#9bffb0',
-  autumn: '#ffbf69',
+  winter: '#9CCEEC',
+  spring: '#ADE6FF',
+  summer: '#CBEEF7',
+  autumn: '#FEE58A',
 };
 
-// 🔑 4 равных сектора по 90°
+// строго по часовой стрелке
 const SECTORS = [
-  { season: 'winter', start: -90, end: 0 },     // верх-право
-  { season: 'spring', start: 0, end: 90 },      // низ-право
-  { season: 'summer', start: 90, end: 180 },    // низ-лево
-  { season: 'autumn', start: 180, end: 270 },   // верх-лево
+  { season: 'winter', start: -90, end: 0 },
+  { season: 'spring', start: 0, end: 90 },
+  { season: 'summer', start: 90, end: 180 },
+  { season: 'autumn', start: 180, end: 270 },
 ];
 
 function polar(cx, cy, r, angle) {
-  const a = angle * Math.PI / 180;
+  const a = (angle * Math.PI) / 180;
   return {
     x: cx + r * Math.cos(a),
     y: cy + r * Math.sin(a),
@@ -33,7 +33,10 @@ function sectorPath(cx, cy, r, start, end) {
   `;
 }
 
-export default function EarthSeasonsOverlay({ size = 360 }) {
+export default function EarthSeasonsOverlay({
+  size = 360,
+  visibleCount = 0,
+}) {
   const c = size / 2;
 
   return (
@@ -48,12 +51,11 @@ export default function EarthSeasonsOverlay({ size = 360 }) {
         pointerEvents: 'none',
       }}
     >
-      {SECTORS.map(s => (
+      {SECTORS.slice(0, visibleCount).map(s => (
         <path
           key={s.season}
           d={sectorPath(c, c, c, s.start, s.end)}
           fill={COLORS[s.season]}
-          opacity="0.6"
         />
       ))}
     </svg>

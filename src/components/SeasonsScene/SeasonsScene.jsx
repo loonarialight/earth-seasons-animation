@@ -1,53 +1,49 @@
-import { useEffect, useMemo, useRef, } from 'react';
+import { useEffect, useState } from 'react';
 import assets from '../../assets/assets';
-import './SeasonsScene.css';
+
 import EarthSeasonsOverlay from '../EarthSeasonsOverlay/EarthSeasonsOverlay';
+import SeasonLabels from '../SeasonLabels/SeasonLabels';
+
+import './SeasonsScene.css';
 
 const SEASON_ORDER = ['winter', 'spring', 'summer', 'autumn'];
+const STEP_DURATION = 1500;
 
-const STEP_DURATION = 2000;
-const FINAL_DURATION = 3000;
-
-export default function SeasonsScene({ data, onComplete }) {
-  const completedRef = useRef(false);
-
-  const seasons = useMemo(() => {
-    const available = new Set(data.map(m => m.Season));
-    return SEASON_ORDER.filter(s => available.has(s));
-  }, [data]);
+export default function SeasonsScene({ onComplete }) {
+  const [step, setStep] = useState(0);
 
   useEffect(() => {
-    if (!seasons.length) return;
-    if (completedRef.current) return;
+    if (step > SEASON_ORDER.length) {
+      onComplete?.();
+      return;
+    }
 
     const timer = setTimeout(() => {
-      completedRef.current = true;
-      onComplete?.();
-    }, FINAL_DURATION);
+      setStep(s => s + 1);
+    }, STEP_DURATION);
 
     return () => clearTimeout(timer);
-  }, [seasons, onComplete]);
+  }, [step, onComplete]);
 
   return (
     <div className="earth-stage">
-      <div className="season-layer">
+      <div className="earth-wrapper">
+        <img
+          src={assets.earth}
+          alt="Earth"
+          className="earth-img"
+        />
 
-        <div className="season-title">
-          ВРЕМЕНА ГОДА
-        </div>
+        {/* СЦЕНА 3 — фоновые сектора */}
+        <EarthSeasonsOverlay
+          size={360}
+          visibleCount={step}
+        />
 
-        <div className="earth-wrapper">
-          {/* 🌍 Земля */}
-          <img
-            src={assets.earth}
-            alt="Earth"
-            className="earth-img"
-          />
-
-          {/* 🎨 SVG-раскраска сезонов */}
-          <EarthSeasonsOverlay />
-        </div>
-
+        {/* СЦЕНА 4 — подпись сезона */}
+        <SeasonLabels
+          season={SEASON_ORDER[step - 1]}
+        />
       </div>
     </div>
   );
