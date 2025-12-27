@@ -9,18 +9,19 @@ import Months from './components/Months/Months';
 import ArcHighlight from './components/ArcHighlight/ArcHighlight';
 import { useSceneTimeline } from './hooks/useSceneTimeline';
 import DugaPainting from './components/Dugapainting/Dugapainting';
+import SeasonsRing from './components/SeasonRing/SeasonRing';
 
 import questionData from './mock/question-786.json';
 console.log('JSON from backend:', questionData.question);
+ 
 
 function App() {
   const stage = useSceneTimeline([6300, 2000]);
 
   const [showNumbers, setShowNumbers] = useState(false);
   const [showMonths, setShowMonths] = useState(false);
-
   const [showArc, setShowArc] = useState(false);
-  // 🔥 единый источник данных
+
   const monthsData = questionData.question;
 
   return (
@@ -36,25 +37,32 @@ function App() {
       )}
 
       {showNumbers && (
-  <Numbers
-    data={monthsData}
-    onComplete={() => setShowArc(true)}
-  />
-)}
+        <Numbers
+          data={monthsData}
+          onComplete={() => setShowArc(true)}
+        />
+      )}
 
-{showArc && (
-  <DugaPainting
-    data={monthsData}
-    onComplete={() => setShowMonths(true)}
-  />
-)}
+      {showArc && (
+        <DugaPainting
+          data={monthsData}
+          onComplete={() => setShowMonths(true)}
+        />
+      )}
 
-{showMonths && (
-  <Months data={monthsData} />
-)}
+      {/* 🌈 КОЛЬЦО СЕЗОНОВ (SVG) */}
+      {showMonths && (
+        <SeasonsRing
+          outerRadius={190}
+          innerRadius={150}
+        />
+      )}
 
+      {/* 📝 МЕСЯЦЫ */}
+      {showMonths && (
+        <Months data={monthsData} />
+      )}
     </div>
   );
 }
-
 export default App;

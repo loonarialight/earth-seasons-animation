@@ -16,7 +16,7 @@
 /* EARTH */
 .earth {
   position: absolute;
-  width: 70px;
+  width: 90px;
   z-index: 4;
   transform-origin: center;
 }

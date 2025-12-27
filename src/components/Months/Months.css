@@ -1,3 +1,4 @@
+/* OVERLAY */
 .months-overlay {
   position: fixed;
   inset: 0;
@@ -5,36 +6,38 @@
   pointer-events: none;
 }
 
-/* ОБЩИЙ КОНТЕЙНЕР МЕСЯЦА */
+/* МЕСЯЦ (КОНТЕЙНЕР) */
 .month-item {
   position: absolute;
-  top: 48.5%;
-  left: 47.5%;
-  transform-origin: center;
-}
+  top: 48%;
+  left: 48%;
 
-/* ДУГА */
-.month-arc {
-  position: absolute;
-  top: -26px;              /* дуга НАД текстом */
-  left: 50%;
-  transform: translateX(-150%);
-  width: absolute;            /* чтобы не "уменьшалась" визуально */
-  pointer-events: none;
+  /* 🔑 ключ к ровному радиусу */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transform-origin: center center;
+  white-space: nowrap;
 }
 
 /* ТЕКСТ */
 .month-text {
-  font-size: 11px;
+  font-family: 'Inter', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 2px;
+  letter-spacing: 0.18em;
+
   color: transparent;
   white-space: nowrap;
-  text-align: center;
-  transition: color 0.5s ease;
+
+  /* 🔥 убирает "март и сентябрь ниже" */
+  transform: translateY(0.35em);
+
+  transition: color 0.4s ease;
 }
 
 /* АКТИВНЫЙ МЕСЯЦ */
 .month-item.active .month-text {
-  color: violet;
+  color: rgb(0, 0, 0);
 }
