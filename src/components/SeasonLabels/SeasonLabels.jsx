@@ -11,7 +11,7 @@ export default function SeasonLabels({ season }) {
   if (!season) return null;
 
   return (
-    <div className={`season-label ${season}`}>
+    <div className="season-label">
       {TITLES[season]}
     </div>
   );

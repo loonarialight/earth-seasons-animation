@@ -1,0 +1,17 @@
+.earth-stage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.earth-wrapper {
+  position: relative;   /* 🔑 БЕЗ ЭТОГО НИЧЕГО НЕ БУДЕТ */
+  width: 360px;
+  height: 360px;
+}
+
+.earth-img {
+  width: 360px;
+  height: 360px;
+  display: block;
+}

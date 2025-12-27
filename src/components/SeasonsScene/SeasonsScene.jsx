@@ -34,13 +34,12 @@ export default function SeasonsScene({ onComplete }) {
           className="earth-img"
         />
 
-        {/* СЦЕНА 3 — фоновые сектора */}
+        {/* ⬇️ ВОТ ЗДЕСЬ */}
         <EarthSeasonsOverlay
           size={360}
           visibleCount={step}
         />
 
-        {/* СЦЕНА 4 — подпись сезона */}
         <SeasonLabels
           season={SEASON_ORDER[step - 1]}
         />
