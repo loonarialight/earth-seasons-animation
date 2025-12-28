@@ -1,6 +1,6 @@
 import { useAnimationFrame } from 'framer-motion';
 import { useMemo, useState } from 'react';
-import assets from '../../assets/assets';
+import assets from '../../../assets/assets';
 import './OrbitScene.css';
 
 export default function OrbitScene() {

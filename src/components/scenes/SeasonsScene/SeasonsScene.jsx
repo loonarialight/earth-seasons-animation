@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import assets from '../../assets/assets';
+import assets from '../../../assets/assets';
 
-import EarthSeasonsOverlay from '../EarthSeasonsOverlay/EarthSeasonsOverlay';
-import SeasonLabels from '../SeasonLabels/SeasonLabels';
-import EarthLabelAnchor from '../EarthLabelAnchor/EarthLabelAnchor';
+import EarthSeasonsOverlay from "../../EarthSeasonsOverlay/EarthSeasonsOverlay";
+import SeasonLabels from "../../overlays/SeasonLabels/SeasonLabels";
+import EarthLabelAnchor from "../../primitives/EarthLabelAnchor/EarthLabelAnchor";
+
 
 import './SeasonsScene.css';
 

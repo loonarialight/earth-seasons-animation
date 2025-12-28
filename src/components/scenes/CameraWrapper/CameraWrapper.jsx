@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import assets from '../../assets/assets';
-import '../../styles/earthStage.css';
+import assets from '../../../assets/assets';
+import "../../../styles/earthStage.css";
 import './CameraWrapper.css';
 
 export default function CameraWrapper() {

@@ -1,8 +1,8 @@
 import './App.css';
 
-import OrbitScene from './components/OrbitScene/OrbitScene';
-import CameraWrapper from './components/CameraWrapper/CameraWrapper';
-import SeasonsScene from './components/SeasonsScene/SeasonsScene';
+import OrbitScene from './components/scenes/OrbitScene/OrbitScene';
+import CameraWrapper from './components/scenes/CameraWrapper/CameraWrapper';
+import SeasonsScene from './components/scenes/SeasonsScene/SeasonsScene';
 
 import { useSceneTimeline } from './hooks/useSceneTimeline';
 import questionData from './mock/question-786.json';
