@@ -1,68 +1,35 @@
-import { useState } from 'react';
 import './App.css';
 
 import OrbitScene from './components/OrbitScene/OrbitScene';
 import CameraWrapper from './components/CameraWrapper/CameraWrapper';
 import SeasonsScene from './components/SeasonsScene/SeasonsScene';
-import Numbers from './components/Numbers/Numbers';
-import Months from './components/Months/Months';
-import ArcHighlight from './components/ArcHighlight/ArcHighlight';
-import { useSceneTimeline } from './hooks/useSceneTimeline';
-import DugaPainting from './components/Dugapainting/Dugapainting';
-import SeasonsRing from './components/SeasonRing/SeasonRing';
 
+import { useSceneTimeline } from './hooks/useSceneTimeline';
 import questionData from './mock/question-786.json';
-console.log('JSON from backend:', questionData.question);
- 
 
 function App() {
+  // ⏱ таймлайн: сцена 0 → сцена 1 → дальше сезоны
   const stage = useSceneTimeline([6300, 2000]);
 
-  const [showNumbers, setShowNumbers] = useState(false);
-  const [showMonths, setShowMonths] = useState(false);
-  const [showArc, setShowArc] = useState(false);
-
+  // 📦 данные месяцев (из mock / backend)
   const monthsData = questionData.question;
 
   return (
     <div className="scene">
+      {/* 🟢 SCENE 1 — Орбита */}
       {stage === 0 && <OrbitScene />}
+
+      {/* 🟢 SCENE 2 — Зум / камера */}
       {stage === 1 && <CameraWrapper />}
 
+      {/* 🟢 SCENE 3–4 — Сезоны (фон + логика года) */}
       {stage >= 2 && (
-        <SeasonsScene
-          data={monthsData}
-          onComplete={() => setShowNumbers(true)}
-        />
+        <SeasonsScene data={monthsData} />
       )}
 
-      {showNumbers && (
-        <Numbers
-          data={monthsData}
-          onComplete={() => setShowArc(true)}
-        />
-      )}
-
-      {showArc && (
-        <DugaPainting
-          data={monthsData}
-          onComplete={() => setShowMonths(true)}
-        />
-      )}
-
-      {/* 🌈 КОЛЬЦО СЕЗОНОВ (SVG) */}
-      {showMonths && (
-        <SeasonsRing
-          outerRadius={190}
-          innerRadius={150}
-        />
-      )}
-
-      {/* 📝 МЕСЯЦЫ */}
-      {showMonths && (
-        <Months data={monthsData} />
-      )}
+      {/* 🔒 SCENE 5–6 TEMPORARILY DISABLED */}
     </div>
   );
 }
+
 export default App;

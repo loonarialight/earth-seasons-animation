@@ -14,3 +14,16 @@ export default function SeasonLabels({ season }) {
     </span>
   );
 }
+
+/**
+ * SeasonLabels
+ *
+ * Отображает названия сезонов:
+ * – ЗИМА
+ * – ВЕСНА
+ * – ЛЕТО
+ * – ОСЕНЬ
+ *
+ * Используется в SeasonsScene.
+ * Это текстовые подписи, не месяцы.
+ */

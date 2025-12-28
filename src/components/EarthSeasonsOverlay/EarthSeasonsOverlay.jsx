@@ -95,3 +95,14 @@ export default function EarthSeasonsOverlay({
     </svg>
   );
 }
+
+/**
+ * EarthSeasonsOverlay
+ *
+ * Визуальный слой поверх Земли:
+ * – цветовые зоны сезонов
+ * – подсветка четвертей круга
+ *
+ * Используется внутри SeasonsScene.
+ * Не содержит логики месяцев или чисел.
+ */
