@@ -1,58 +1,42 @@
+import { SEGMENTS } from "./segments";
+
 const CENTER = 210;
-const RADIUS = 185;
-const SEGMENT = 360 / 12;
+const RADIUS = 230; // 🔑 ВАЖНО: больше радиуса дуги
+const SEGMENT_ANGLE = 360 / 12;
 
-const MONTH_NAMES = [
-  "ЯНВАРЬ",
-  "ФЕВРАЛЬ",
-  "МАРТ",
-  "АПРЕЛЬ",
-  "МАЙ",
-  "ИЮНЬ",
-  "ИЮЛЬ",
-  "АВГУСТ",
-  "СЕНТЯБРЬ",
-  "ОКТЯБРЬ",
-  "НОЯБРЬ",
-  "ДЕКАБРЬ",
-];
-
-export default function MonthNumbersArc({ months }) {
+export default function MonthNumbersArc({ activeIndex }) {
   return (
-    <>
-      {months.map(({ index, mode }) => {
-        const angle = -90 + (index + 1) * SEGMENT + SEGMENT / 2;
+    <svg
+      className="month-number-label"
+      width="420"
+      height="420"
+      viewBox="0 0 420 420"
+    >
+      {SEGMENTS.map(seg => {
+        if (seg.index > activeIndex) return null;
+
+        const angle = -90 + (seg.index + 0.5) * SEGMENT_ANGLE;
         const rad = (angle * Math.PI) / 180;
 
         const x = CENTER + Math.cos(rad) * RADIUS;
         const y = CENTER + Math.sin(rad) * RADIUS;
 
-        const isName = mode === "name";
-
         return (
-          <svg
-            key={index}
-            width="420"
-            height="420"
-            viewBox="0 0 420 420"
-            className="month-number-label"
+          <text
+            key={seg.index}
+            x={x}
+            y={y}
+            fill="#000"
+            fontSize="16"
+            fontWeight="700"
+            textAnchor="middle"
+            dominantBaseline="middle"
+            transform={`rotate(${angle + 90} ${x} ${y})`}
           >
-            <text
-              x={x}
-              y={y}
-              fill={isName ? "white" : "black"}
-              fontSize={isName ? 11 : 16}
-              fontWeight="700"
-              textAnchor="middle"
-              dominantBaseline="middle"
-              transform={`rotate(${angle + 90} ${x} ${y})`}
-              className={isName ? "month-name" : "month-number"}
-            >
-              {isName ? MONTH_NAMES[index] : index + 1}
-            </text>
-          </svg>
+            {seg.index === 0 ? 12 : seg.index}
+          </text>
         );
       })}
-    </>
+    </svg>
   );
 }

@@ -1,0 +1,37 @@
+.months-array-stage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.months-row {
+  display: flex;
+  gap: 14px;
+}
+
+.month-cell {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: #eaf6ff;
+  color: #000;
+  font-weight: 700;
+  font-size: 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  opacity: 0;
+  transform: translateY(10px);
+  animation: monthIn 0.4s ease forwards;
+}
+
+@keyframes monthIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,16 +1,14 @@
+import { SEGMENTS } from "./segments";
+
 const CENTER = 210;
 const RADIUS = 176;
 const STROKE = 30;
-const SEGMENT = 360 / 12;
+const SEGMENT_ANGLE = 360 / 12;
 
-const SEASON_META = [
-  { color: "#9CCEEC", start: 12 }, // ❄ 12,1,2
-  { color: "#ADE6FF", start: 3 },  // 🌸 3,4,5
-  { color: "#CBEEF7", start: 6 },  // ☀ 6,7,8
-  { color: "#FEE58A", start: 9 },  // 🍂 9,10,11
-];
+const INNER_RADIUS = RADIUS - STROKE / 2;
+const OUTER_RADIUS = RADIUS + STROKE / 2;
 
-export default function SeasonRing({ visibleSeasons, monthsInSeason }) {
+export default function SeasonRing({ activeIndex }) {
   const polar = (angle, r) => {
     const rad = (angle * Math.PI) / 180;
     return {
@@ -20,14 +18,12 @@ export default function SeasonRing({ visibleSeasons, monthsInSeason }) {
   };
 
   return (
-    <svg width="420" height="420" viewBox="0 0 420 420">
-      {SEASON_META.slice(0, visibleSeasons).map((s, i) => {
-        const startAngle = -90 + s.start * SEGMENT;
+    <svg className="season-ring" width="420" height="420" viewBox="0 0 420 420">
+      {SEGMENTS.map(seg => {
+        if (seg.index > activeIndex) return null;
 
-        const months =
-          i === visibleSeasons - 1 ? monthsInSeason : 3;
-
-        const endAngle = startAngle + months * SEGMENT;
+        const startAngle = -90 + seg.index * SEGMENT_ANGLE;
+        const endAngle = startAngle + SEGMENT_ANGLE;
 
         const start = polar(startAngle, RADIUS);
         const end = polar(endAngle, RADIUS);
@@ -37,42 +33,27 @@ export default function SeasonRing({ visibleSeasons, monthsInSeason }) {
           A ${RADIUS} ${RADIUS} 0 0 1 ${end.x} ${end.y}
         `;
 
+        const dividerAngle = startAngle;
+        const p1 = polar(dividerAngle, INNER_RADIUS);
+        const p2 = polar(dividerAngle, OUTER_RADIUS);
+
         return (
-          <g key={i}>
-            {/* 🌈 основная дуга сезона */}
+          <g key={seg.index}>
             <path
               d={d}
               fill="none"
-              stroke={s.color}
+              stroke={seg.color}
               strokeWidth={STROKE}
-              strokeLinecap="butt"
             />
-
-            {/* │ разделители месяцев */}
-            {/* │ разделители месяцев + линия старта */}
-            {[0, 1, 2].map((m) => {
-              // линия появляется, если дуга уже дошла до этого месяца
-              if (m > months) return null;
-
-              const angle = startAngle + m * SEGMENT;
-
-              const p1 = polar(angle, RADIUS - STROKE / 2);
-              const p2 = polar(angle, RADIUS + STROKE / 2);
-
-              return (
-                <line
-                  key={m}
-                  x1={p1.x}
-                  y1={p1.y}
-                  x2={p2.x}
-                  y2={p2.y}
-                  stroke="#000"
-                  strokeWidth="1"
-                  opacity="0.6"
-                />
-              );
-            })}
-
+            <line
+              x1={p1.x}
+              y1={p1.y}
+              x2={p2.x}
+              y2={p2.y}
+              stroke="#000"
+              strokeWidth="1"
+              opacity="0.5"
+            />
           </g>
         );
       })}
