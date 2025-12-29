@@ -8,21 +8,22 @@ import "./seasonToMonths.css";
 export default function SeasonToMonthsStage({ onComplete }) {
   const [arcIndex, setArcIndex] = useState(-1);
   const [numberIndex, setNumberIndex] = useState(-1);
-  const [step, setStep] = useState(0); // 👈 ТОЛЬКО ЛОГИКА
+  const [step, setStep] = useState(0); // логика таймлайна
 
   useEffect(() => {
+    // ✅ сцена полностью завершена
     if (arcIndex >= 11 && numberIndex >= 11) {
       onComplete?.();
       return;
     }
 
     const t = setTimeout(() => {
-      // чётные шаги — дуги
+      // 🔵 чётные шаги — дуги
       if (step % 2 === 0 && arcIndex < 11) {
         setArcIndex(i => i + 1);
       }
 
-      // нечётные шаги — цифры
+      // 🔢 нечётные шаги — цифры
       if (step % 2 === 1 && numberIndex < arcIndex) {
         setNumberIndex(i => i + 1);
       }
@@ -33,7 +34,7 @@ export default function SeasonToMonthsStage({ onComplete }) {
     return () => clearTimeout(t);
   }, [step, arcIndex, numberIndex, onComplete]);
 
-  // 🌳 сезоны открываются ТОЛЬКО по дугам
+  // 🌳 сезоны открываются строго по дугам
   const openedSeasons = Array.from(
     new Set(
       SEGMENTS
@@ -47,6 +48,7 @@ export default function SeasonToMonthsStage({ onComplete }) {
       <div className="scene-wrapper">
 
         <SeasonRing activeIndex={arcIndex} />
+
         <MonthNumbersArc activeIndex={numberIndex} />
 
         {openedSeasons.map(season => (
