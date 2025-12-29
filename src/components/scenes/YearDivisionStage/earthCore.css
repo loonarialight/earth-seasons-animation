@@ -1,0 +1,15 @@
+.earth-core {
+  position: absolute;
+  width: 320px;
+  height: 320px;
+
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+
+  z-index: 1; /* ФОН */
+}
