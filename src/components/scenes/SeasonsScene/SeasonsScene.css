@@ -1,17 +1,31 @@
+/* 🌍 СЦЕНА — ВСЕГДА НА ВЕСЬ ЭКРАН */
 .earth-stage {
+  position: absolute;
+  inset: 0;
+
   display: flex;
   justify-content: center;
   align-items: center;
+
+  overflow: visible;
 }
 
+/* 🧲 ЯКОРЬ ЗЕМЛИ */
 .earth-wrapper {
-  position: relative;   /* 🔑 БЕЗ ЭТОГО НИЧЕГО НЕ БУДЕТ */
+  position: relative;
   width: 320px;
   height: 320px;
 }
 
+/* 🌍 ЗЕМЛЯ — ЖЁСТКО В ЦЕНТРЕ WRAPPER */
 .earth-img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+
   width: 320px;
   height: 320px;
+
+  transform: translate(-50%, -50%);
   display: block;
 }

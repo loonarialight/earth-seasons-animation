@@ -16,6 +16,7 @@
 /* Цифра 3 / 6 / 9 / 12 сверху */
 .quarter-number {
   position: absolute;
+  z-index: 5;
   top: -24px;
 
   font-size: 32px;

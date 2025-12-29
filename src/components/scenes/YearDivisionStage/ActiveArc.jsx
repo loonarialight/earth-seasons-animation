@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-const RADIUS = 1;
-const CENTER = 240;
+const RADIUS = 185;
+const CENTER = 210;
 const SEGMENT = 360 / 12;
 
 export default function ActiveArc({ index, animate = false }) {
@@ -47,10 +47,10 @@ export default function ActiveArc({ index, animate = false }) {
 
   return (
     <svg
-      width="480"
-      height="480"
-      viewBox="0 0 480 480"
-      className="active-number"
+      width="420"
+      height="420"
+      viewBox="0 0 420 420"
+      className="active-arc"
     >
 
       <path

@@ -6,7 +6,6 @@ export default function MonthNumbersArc({ months }) {
   return (
     <>
       {months.map((m) => {
-        // ⬅️ СДВИГ НА 1 ДУГУ ВПРАВО
         const angle = -90 + (m + 1) * SEGMENT + SEGMENT / 2;
         const rad = (angle * Math.PI) / 180;
 
@@ -19,7 +18,7 @@ export default function MonthNumbersArc({ months }) {
             width="420"
             height="420"
             viewBox="0 0 420 420"
-            className="month-number-label"
+            className="month-number-label visible"
           >
             <text
               x={x}

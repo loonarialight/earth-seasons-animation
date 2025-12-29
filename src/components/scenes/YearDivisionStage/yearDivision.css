@@ -5,55 +5,66 @@
   align-items: center;
   justify-content: center;
   pointer-events: none;
+  overflow: visible;
 }
 
-.year-ring,
-.active-arc,
+/* ⭕ БЕЛОЕ КОЛЬЦО */
+.year-ring {
+  position: absolute;
+  z-index: 2;
+  overflow: visible;
+}
+
+/* 🎨 АКТИВНАЯ ДУГА */
+.active-arc {
+  position: absolute;
+  z-index: 3;
+  overflow: visible;
+}
+
+/* 🔢 АКТИВНЫЕ ЦИФРЫ */
 .active-number {
   position: absolute;
+  z-index: 4;
+  overflow: visible;
 }
 
+/* 🔢 ТЕКСТ ЦИФР */
 .number-text {
   font-size: 28px;
   fill: white;
   font-weight: 600;
+
   opacity: 0;
-  animation: fadeIn 0.3s ease forwards;
+  animation: fadeIn 0.35s ease forwards;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.85);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
+/* 🌍 ЗЕМЛЯ */
 .earth-core-img {
   width: 320px;
   height: 320px;
   border-radius: 50%;
   background-size: cover;
   background-position: center;
+
   position: absolute;
-  z-index: 1; /* ВАЖНО */
+  z-index: 1;
 }
 
-.year-division-stage {
-  overflow: visible;
+/* ✨ ОБЩАЯ АНИМАЦИЯ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
-.active-number {
-  overflow: visible;
-}
-
+/* 🚫 НИЧЕГО НЕ ОБРЕЗАЕМ */
+.scene,
+.year-division-stage,
+.active-number,
 .active-number svg {
-  overflow: visible;
-}
-
-.scene {
   overflow: visible;
 }

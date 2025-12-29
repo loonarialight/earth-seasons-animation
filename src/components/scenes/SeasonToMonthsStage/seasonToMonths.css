@@ -6,51 +6,48 @@
   justify-content: center;
 }
 
-/* 🧩 КАРТИНКИ СЕЗОНОВ */
+/* 🧩 КАРТИНКИ СЕЗОНОВ — ТОЛЬКО OPACITY */
 .season-image {
   position: absolute;
-  width: 260px;
-  height: 260px;
+  width: 320px;
+  height: 320px;
   border-radius: 50%;
 
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
 
-  animation: seasonPop 0.5s ease forwards;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+
   z-index: 2;
 }
 
-/* 🎨 ДУГИ */
+.season-image.visible {
+  opacity: 1;
+}
+
+/* 🎨 СЕЗОННЫЕ ДУГИ — НАКАПЛИВАЮТСЯ */
 .quarter-arc {
   position: absolute;
+  opacity: 0;
+  transition: opacity 0.6s ease;
   z-index: 3;
 }
 
-/* 🔢 ЦИФРЫ */
+.quarter-arc.quarter-visible {
+  opacity: 1;
+}
+
+/* 🔢 ЦИФРЫ МЕСЯЦЕВ */
 .month-number-label {
   position: absolute;
-  z-index: 4;
+  opacity: 0;
+  transition: opacity 0.6s ease;
   pointer-events: none;
+  z-index: 4;
 }
 
-/* ✨ АНИМАЦИЯ */
-@keyframes seasonPop {
-  from {
-    opacity: 0;
-    transform: scale(0.85);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+.month-number-label.visible {
+  opacity: 1;
 }
-
-
-.season-image {
-  opacity: 0.9;
-}
-.season-winter { transform: rotate(0deg); }
-.season-spring { transform: rotate(90deg); }
-.season-summer { transform: rotate(180deg); }
-.season-autumn { transform: rotate(270deg); }
