@@ -1,33 +1,72 @@
-import './App.css';
+import "./App.css";
 
-import OrbitScene from './components/scenes/OrbitScene/OrbitScene';
-import CameraWrapper from './components/scenes/CameraWrapper/CameraWrapper';
-import SeasonsScene from './components/scenes/SeasonsScene/SeasonsScene';
+import { useState } from "react";
+import { useSceneTimeline } from "./hooks/useSceneTimeline";
 
-import { useSceneTimeline } from './hooks/useSceneTimeline';
-import questionData from './mock/question-786.json';
+import OrbitScene from "./components/scenes/OrbitScene/OrbitScene";
+import CameraWrapper from "./components/scenes/CameraWrapper/CameraWrapper";
+import SeasonsScene from "./components/scenes/SeasonsScene/SeasonsScene";
 
+import YearDivisionStage from "./components/scenes/YearDivisionStage/YearDivisionStage";
+import YearQuarterStage from "./components/scenes/YearQuarterStage/YearQuarterStage";
+import SeasonToMonthsStage from "./components/scenes/SeasonToMonthsStage/SeasonToMonthsStage";
+
+import questionData from "./mock/question-786.json";
+
+/**
+ * СЦЕНЫ:
+ * 0 — орбита
+ * 1 — зум
+ * 2–3 — сезоны
+ * 4 — деление года (1–12)
+ * 5 — кварталы (3/6/9/12)
+ * 6 — сезон → его месяцы (картинка + цифры)
+ */
 function App() {
-  // ⏱ таймлайн: сцена 0 → сцена 1 → дальше сезоны
-  const stage = useSceneTimeline([6300, 2000]);
+  const autoStage = useSceneTimeline([6300, 2000]);
+  const [manualStage, setManualStage] = useState(null);
 
-  // 📦 данные месяцев (из mock / backend)
+  const stage = manualStage !== null ? manualStage : autoStage;
   const monthsData = questionData.question;
 
   return (
     <div className="scene">
-      {/* 🟢 SCENE 1 — Орбита */}
+      {/* 🟢 СЦЕНА 0 — Орбита */}
       {stage === 0 && <OrbitScene />}
 
-      {/* 🟢 SCENE 2 — Зум / камера */}
+      {/* 🟢 СЦЕНА 1 — Зум */}
       {stage === 1 && <CameraWrapper />}
 
-      {/* 🟢 SCENE 3–4 — Сезоны (фон + логика года) */}
-      {stage >= 2 && (
-        <SeasonsScene data={monthsData} />
+      {/* 🟢 СЦЕНА 2–3 — Сезоны */}
+      {stage >= 2 && stage < 4 && (
+        <SeasonsScene
+          data={monthsData}
+          onComplete={() => setManualStage(4)}
+        />
       )}
 
-      {/* 🔒 SCENE 5–6 TEMPORARILY DISABLED */}
+      {/* 🟢 СЦЕНА 4 — Деление года 1–12 */}
+      {stage === 4 && (
+        <YearDivisionStage
+          onComplete={() => setManualStage(5)}
+        />
+      )}
+
+      {/* 🟢 СЦЕНА 5 — Кварталы */}
+      {stage === 5 && (
+        <YearQuarterStage
+          onComplete={() => setManualStage(6)}
+        />
+      )}
+
+      {/* 🟢 СЦЕНА 6 — Сезон → месяцы */}
+      {stage === 6 && (
+        <SeasonToMonthsStage
+          onComplete={() => {
+            console.log("Season → months complete");
+          }}
+        />
+      )}
     </div>
   );
 }

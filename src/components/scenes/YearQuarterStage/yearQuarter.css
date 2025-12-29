@@ -1,0 +1,47 @@
+.year-quarter-stage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+/* Цветные дуги */
+.quarter-arc {
+  position: absolute;
+  z-index: 3;
+}
+
+/* Цифра 3 / 6 / 9 / 12 сверху */
+.quarter-number {
+  position: absolute;
+  top: -24px;
+
+  font-size: 32px;
+  font-weight: 700;
+  color: white;
+
+  animation: fadeInScale 0.3s ease forwards;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.quarter-label {
+  position: absolute;
+  z-index: 4;
+  pointer-events: none;
+}
+.month-number-label {
+  position: absolute;
+  z-index: 4;
+  pointer-events: none;
+}
