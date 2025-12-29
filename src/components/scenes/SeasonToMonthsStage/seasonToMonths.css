@@ -13,12 +13,12 @@
   height: 320px;
   border-radius: 50%;
 
-  background-size: contain;
-  background-repeat: no-repeat;
+  background-size: cover; 
   background-position: center;
-
+  
   opacity: 0;
-  transition: opacity 0.8s ease;
+  transform: scale(0.96);
+  animation: seasonFadeIn 0.8s ease forwards;
 
   z-index: 2;
 }
@@ -50,4 +50,10 @@
 
 .month-number-label.visible {
   opacity: 1;
+}
+@keyframes seasonFadeIn {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }

@@ -4,7 +4,7 @@ import "./seasonToMonths.css";
 export default function SeasonImage({ season }) {
   return (
     <div
-      className={`season-image season-${season} visible`}
+      className={`season-image season-${season}`}
       style={{
         backgroundImage: `url(${assets.seasons[season]})`,
       }}

@@ -13,8 +13,8 @@
 /* 🧲 ЯКОРЬ ЗЕМЛИ */
 .earth-wrapper {
   position: relative;
-  width: 320px;
-  height: 320px;
+  width: 360px;
+  height: 360px;
 }
 
 /* 🌍 ЗЕМЛЯ — ЖЁСТКО В ЦЕНТРЕ WRAPPER */
@@ -23,8 +23,8 @@
   left: 50%;
   top: 50%;
 
-  width: 320px;
-  height: 320px;
+  width: 360px;
+  height: 360px;
 
   transform: translate(-50%, -50%);
   display: block;

@@ -38,7 +38,7 @@ export default function SeasonsScene({ onComplete }) {
         />
 
         <EarthSeasonsOverlay
-          size={320}
+          size={360}
           visibleCount={step}
         />
 

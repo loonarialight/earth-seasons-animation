@@ -2,7 +2,9 @@ import "./App.css";
 
 import { useState } from "react";
 import { useSceneTimeline } from "./hooks/useSceneTimeline";
-
+import OrbitScene from "./components/scenes/OrbitScene/OrbitScene"; 
+import CameraWrapper from "./components/scenes/CameraWrapper/CameraWrapper"; 
+ 
 import SeasonsScene from "./components/scenes/SeasonsScene/SeasonsScene";
 import YearDivisionStage from "./components/scenes/YearDivisionStage/YearDivisionStage";
 import SeasonToMonthsStage from "./components/scenes/SeasonToMonthsStage/SeasonToMonthsStage";
@@ -26,6 +28,13 @@ function App() {
 
   return (
     <div className="scene">
+      {/* 🟢 СЦЕНА 0 — Орбита */}
+      {stage === 0 && <OrbitScene />}
+
+      {/* 🟢 СЦЕНА 1 — Зум */}
+      {stage === 1 && <CameraWrapper />}
+
+      
       {/* 🟢 СЦЕНА 2–3 — Сезоны */}
       {stage >= 2 && stage < 4 && (
         <SeasonsScene
