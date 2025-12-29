@@ -1,7 +1,7 @@
 export default function MonthNumberLabel({ monthIndex }) {
   const SIZE = 420;
   const CENTER = 210;
-  const RADIUS = 175;          // центр белого кольца
+  const RADIUS = 182;          // центр белого кольца
   const SEGMENT = 360 / 12;
 
   // ⬅️ сдвиг на 1 дугу вправо
