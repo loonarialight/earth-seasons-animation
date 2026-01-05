@@ -21,7 +21,7 @@ import questionData from "./mock/question-786.json";
  * 4 — деление года (белое кольцо)
  */
 function App() {
-  const autoStage = useSceneTimeline([6300, 2000]);
+  const autoStage = useSceneTimeline([7300, 2000]);
   const [manualStage, setManualStage] = useState(null);
 
   const stage = manualStage !== null ? manualStage : autoStage;
@@ -29,7 +29,7 @@ function App() {
 
   return (
     <div className="scene">
-      {/* 🟢 СЦЕНА 0 — Орбита */}
+      🟢 СЦЕНА 0 — Орбита
       {stage === 0 && <OrbitScene />}
 
       {/* 🟢 СЦЕНА 1 — Зум */}

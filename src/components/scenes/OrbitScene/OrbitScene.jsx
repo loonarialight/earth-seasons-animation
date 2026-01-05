@@ -4,13 +4,21 @@ import assets from "../../../assets/assets";
 import "./OrbitScene.css";
 import "../../../App.css";
 
-export default function OrbitScene() {
+export default function OrbitScene({ onComplete }) {
   const START_ANGLE = -Math.PI / 2;
   const FULL_CIRCLE = Math.PI * 2;
+  const CENTER_Y_OFFSET = 40; // ⬅️ подбирай: 30–80
 
-  // 🔑 ЕДИНЫЙ ИСТОЧНИК РАЗМЕРОВ
+
+  // 🔑 размеры
   const SUN_SIZE = 200;
-  const EARTH_SIZE = 60; // было 90 → уменьшили на 30
+  const EARTH_SIZE = 60;
+  const RADIUS = 200;
+
+  // ⏱ тайминги (мс)
+  const APPEAR_TIME = 800;
+  const START_MOVE_TIME = 600;
+  const YEAR_HOLD_TIME = 2000; // ✅ 7–8 секунд
 
   const [scene, setScene] = useState(0);
   const [sceneTime, setSceneTime] = useState(0);
@@ -18,35 +26,41 @@ export default function OrbitScene() {
   const [trail, setTrail] = useState([]);
   const [finished, setFinished] = useState(false);
   const [blackout, setBlackout] = useState(false);
+  const [showYearLabel, setShowYearLabel] = useState(false);
 
   const centerX = window.innerWidth / 2;
-  const centerY = window.innerHeight / 2;
-  const RADIUS = 220;
+  const centerY = window.innerHeight / 2 + CENTER_Y_OFFSET;
 
   useAnimationFrame((_, delta) => {
-    if (blackout && sceneTime > 1000) return;
+    // ⛔ полностью останавливаем сцену после завершения
+    if (scene === 4) return;
 
     setSceneTime((t) => t + delta);
 
-    if (scene === 0 && sceneTime > 800) {
+    // сцена 0 → 1 (появление)
+    if (scene === 0 && sceneTime > APPEAR_TIME) {
       setScene(1);
       setSceneTime(0);
     }
 
-    if (scene === 1 && sceneTime > 600) {
+    // сцена 1 → 2 (старт движения)
+    if (scene === 1 && sceneTime > START_MOVE_TIME) {
       setScene(2);
       setSceneTime(0);
     }
 
+    // 🌍 орбитальное движение
     if (scene === 2 && !finished) {
       setAngle((prev) => {
         const next = prev + 0.025;
         setTrail((t) => [...t, { angle: next }]);
 
+        // 🔁 полный оборот
         if (next >= START_ANGLE + FULL_CIRCLE) {
           setFinished(true);
+          setShowYearLabel(true); // показываем «1 ГОД»
           setScene(3);
-          setSceneTime(0);
+          setSceneTime(0); // ⏱ старт удержания
           return START_ANGLE + FULL_CIRCLE;
         }
 
@@ -54,14 +68,15 @@ export default function OrbitScene() {
       });
     }
 
-    if (scene === 3 && sceneTime > 300) {
+    // 🕒 удержание «1 ГОД» → завершение сцены
+    if (scene === 3 && sceneTime > YEAR_HOLD_TIME) {
       setBlackout(true);
       setScene(4);
-      setSceneTime(0);
+      onComplete?.(); // 🔑 СООБЩАЕМ App.jsx
     }
   });
 
-  // 🌍 позиция центра Земли
+  // 🌍 позиция Земли (по центру орбиты)
   const earthPos = useMemo(
     () => ({
       x: centerX + RADIUS * Math.cos(angle),
@@ -87,6 +102,19 @@ export default function OrbitScene() {
             top: centerY - SUN_SIZE / 2,
           }}
         />
+      )}
+
+      {/* 🕒 1 ГОД */}
+      {showYearLabel && !blackout && (
+        <div
+          className="year-label"
+          style={{
+            left: centerX,
+            top: centerY - RADIUS - 100,
+          }}
+        >
+          1 ГОД
+        </div>
       )}
 
       {/* 🌌 TRAIL */}
@@ -117,6 +145,7 @@ export default function OrbitScene() {
             left: earthPos.x - EARTH_SIZE / 2,
             top: earthPos.y - EARTH_SIZE / 2,
             transform: `rotate(${earthRotation}deg)`,
+
           }}
         />
       )}
