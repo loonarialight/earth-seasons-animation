@@ -5,97 +5,107 @@
   overflow: hidden;
 }
 
-/* ------------------------------
-   🟦 Заголовок в центре
------------------------------- */
-.scene3-month-title {
-  position: absolute;
-  transform: translateX(-50%);
-  font-size: 34px;
-  font-weight: 800;
-  color: white;
-  letter-spacing: 2px;
-  z-index: 20;
-  opacity: 0;
-  animation: fadeIn 0.6s ease forwards;
-}
+/* ================== СЛОИ ================== */
 
-/* ------------------------------
-   🌿 Лепестки (статичны)
------------------------------- */
 .scene3-month {
   position: absolute;
+  z-index: 3;
   transform: translate(-50%, -50%);
   border-radius: 50%;
 }
 
-/* ------------------------------
-   🔢 ЦИФРЫ — МЯГКОЕ ДВИЖЕНИЕ
------------------------------- */
-.month-number-layer {
+.scene2-mask {
   position: absolute;
-  transform: translate(-50%, -50%) scale(0.7);
-  font-size: 40px;
-  font-weight: 700;
+  z-index: 4;
+}
+
+.sun {
+  position: absolute;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.season-rays {
+  position: absolute;
+  z-index: 6;
+  pointer-events: none;
+}
+
+.month-labels {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  pointer-events: none;
+}
+
+/* ================== ЛУЧИ ================== */
+
+.season-rays line {
+  shape-rendering: geometricPrecision;
+}
+
+/* ================== АНИМАЦИЯ ЗАЛИВКИ ДУГ ================== */
+
+.season-rays-animated {
+  clip-path: polygon(50% 50%, 50% 0%, 50% 0%);
+  animation: drawSector 1.6s ease-out forwards;
+}
+
+@keyframes drawSector {
+  0% {
+    clip-path: polygon(
+      50% 50%,
+      50% 0%,
+      50% 0%
+    );
+  }
+
+  100% {
+    clip-path: polygon(
+      50% 50%,
+      0% 0%,
+      100% 0%,
+      100% 100%,
+      50% 100%
+    );
+  }
+}
+
+/* ================== НАЗВАНИЕ СЕЗОНА ================== */
+
+.season-title {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 38;
+
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: 4px;
   color: white;
-  z-index: 30;
-  pointer-events: none;
-
-  /* 🔥 ВОТ ГЛАВНОЕ */
-  transition:
-    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.6s ease;
-  opacity: 0.55;
 }
 
-.month-number-layer.active {
-  transform: translate(-50%, -50%) scale(1.2);
-  opacity: 1;
-}
 
-/* ------------------------------
-   📝 НАЗВАНИЯ — МЯГКОЕ ПОЯВЛЕНИЕ
------------------------------- */
-
-.month-name-layer {
-
-  z-index: 31;
-  position: absolute;
-  font-size: 13px;              /* 👈 меньше */
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  color: rgba(255, 255, 255, 0.85); /* 👈 мягче */
-  white-space: nowrap;
-  pointer-events: none;
-  text-align: center;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.25);
-}
-
-/* ------------------------------
-   ✨ АНИМАЦИИ
------------------------------- */
-@keyframes fadeIn {
-  from {
+/* 👇 появляется сверху → заезжает внутрь дуги → ОСТАЁТСЯ */
+@keyframes seasonTitleIn {
+  0% {
     opacity: 0;
-    transform: translateX(-50%) translateY(-8px);
+    transform: translate(-50%, 0);
   }
-  to {
+
+  40% {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
+    transform: translate(-50%, 0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(-50%, 90px); /* 👈 ВНУТРЬ ДУГИ */
   }
 }
 
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
-svg text {
-  text-shadow: 0 2px 4px rgba(0,0,0,0.35);
-  pointer-events: none;
+/* ================== ЛЕПЕСТКИ МЕСЯЦЕВ ================== */
+
+.scene2-month {
+  border: 0px solid #1c0b68;
+  box-sizing: border-box;
 }
