@@ -5,6 +5,7 @@ import { useState } from "react";
 import OrbitScene from "./components/scenes/OrbitScene/OrbitScene";
 import Scene2YearCircle from "./components/scenes/Scene2YearCircle/Scene2YearCircle";
 import Scene3MonthFocus from "./components/scenes/Scene3MonthFocus/Scene3MonthFocus";
+import Scene4SeasonRays from  "./components/scenes/Scene4SeasonRays/Scene4SeasonRays";
 import CameraWrapper from "./components/scenes/CameraWrapper/CameraWrapper";
 import SeasonsScene from "./components/scenes/SeasonsScene/SeasonsScene";
 import SeasonToMonthsStage from "./components/scenes/SeasonToMonthsStage/SeasonToMonthsStage";
@@ -22,7 +23,9 @@ function App() {
   const [isFading, setIsFading] = useState(false);
 
   const monthsData = questionData.question;
-  const MAX_STAGE = 5;
+
+  // ❗ ОБНОВИЛИ количество сцен
+  const MAX_STAGE = 6;
 
   const changeStage = (nextStage) => {
     setIsFading(true);
@@ -30,7 +33,7 @@ function App() {
     setTimeout(() => {
       setStage(nextStage);
       setIsFading(false);
-    }, 500); // ⏱ длительность fade
+    }, 500); // длительность fade
   };
 
   const goNext = () =>
@@ -42,33 +45,40 @@ function App() {
   return (
     <div className="scene">
       {/* 🟢 0 — Орбита */}
-      {stage === 0 && <OrbitScene onComplete={() => changeStage(1)} />}
+      {stage === 0 && (
+        <OrbitScene onComplete={() => changeStage(1)} />
+      )}
 
-      {/* 🟢 1 — 1 год */}
+      {/* 🟢 1 — Год (лепестки) */}
       {stage === 1 && (
         <Scene2YearCircle onComplete={() => changeStage(2)} />
       )}
 
-      {/* 🟢 2 — Месяцы */}
+      {/* 🟢 2 — Фокус по месяцам */}
       {stage === 2 && (
         <Scene3MonthFocus onComplete={() => changeStage(3)} />
       )}
 
-      {/* 🟢 3 — Зум */}
+      {/* 🟢 3 — СЕЗОН (лучи / четверть круга) */}
       {stage === 3 && (
-        <CameraWrapper onComplete={() => changeStage(4)} />
+        <Scene4SeasonRays onComplete={() => changeStage(4)} />
       )}
 
-      {/* 🟢 4 — Сезоны */}
+      {/* 🟢 4 — Зум */}
       {stage === 4 && (
+        <CameraWrapper onComplete={() => changeStage(5)} />
+      )}
+
+      {/* 🟢 5 — Сезоны (классика) */}
+      {stage === 5 && (
         <SeasonsScene
           data={monthsData}
-          onComplete={() => changeStage(5)}
+          onComplete={() => changeStage(6)}
         />
       )}
 
-      {/* 🟢 5 — Сезоны → месяцы */}
-      {stage === 5 && <SeasonToMonthsStage />}
+      {/* 🟢 6 — Сезоны → месяцы */}
+      {stage === 6 && <SeasonToMonthsStage />}
 
       {/* 🌫 FADE OVERLAY */}
       <div className={`fade-overlay ${isFading ? "active" : ""}`} />
