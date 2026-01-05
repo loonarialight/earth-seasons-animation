@@ -29,7 +29,7 @@ function App() {
 
   return (
     <div className="scene">
-      🟢 СЦЕНА 0 — Орбита
+      {/* 🟢 СЦЕНА 0 — Орбита */}
       {stage === 0 && <OrbitScene />}
 
       {/* 🟢 СЦЕНА 1 — Зум */}

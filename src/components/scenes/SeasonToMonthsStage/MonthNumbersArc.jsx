@@ -78,7 +78,7 @@ export default function MonthNumbersArc({
             key={`num-${seg.index}`}
             x={CENTER + Math.cos(rad) * NUMBER_RADIUS}
             y={CENTER + Math.sin(rad) * NUMBER_RADIUS}
-            fill="#000"
+            fill="#ffffffff"
             fontSize="14"
             fontWeight="700"
             textAnchor="middle"
