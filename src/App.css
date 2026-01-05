@@ -2,9 +2,48 @@
   position: fixed;
   inset: 0;
   overflow: hidden;
-  background: black;
-}
-:root {
-  --circle-center-top: 47%;
-  --circle-center-left: 48%;
+  background-color: #000;
+
+  background-image:
+    /* 🌫️ мелкая звёздная пыль */
+    radial-gradient(1px 1px at 3% 7%,   rgba(255,255,255,0.4), transparent),
+    radial-gradient(1px 1px at 7% 22%,  rgba(255,255,255,0.5), transparent),
+    radial-gradient(1px 1px at 11% 64%, rgba(255,255,255,0.4), transparent),
+    radial-gradient(1px 1px at 15% 85%, rgba(255,255,255,0.6), transparent),
+    radial-gradient(1px 1px at 19% 41%, rgba(255,255,255,0.5), transparent),
+    radial-gradient(1px 1px at 24% 12%, rgba(255,255,255,0.4), transparent),
+    radial-gradient(1px 1px at 27% 73%, rgba(255,255,255,0.6), transparent),
+    radial-gradient(1px 1px at 32% 55%, rgba(255,255,255,0.5), transparent),
+    radial-gradient(1px 1px at 36% 91%, rgba(255,255,255,0.4), transparent),
+    radial-gradient(1px 1px at 39% 18%, rgba(255,255,255,0.6), transparent),
+    radial-gradient(1px 1px at 43% 67%, rgba(255,255,255,0.5), transparent),
+    radial-gradient(1px 1px at 47% 33%, rgba(255,255,255,0.4), transparent),
+    radial-gradient(1px 1px at 51% 79%, rgba(255,255,255,0.6), transparent),
+    radial-gradient(1px 1px at 55% 9%,  rgba(255,255,255,0.5), transparent),
+    radial-gradient(1px 1px at 58% 48%, rgba(255,255,255,0.4), transparent),
+    radial-gradient(1px 1px at 62% 88%, rgba(255,255,255,0.6), transparent),
+    radial-gradient(1px 1px at 66% 26%, rgba(255,255,255,0.5), transparent),
+    radial-gradient(1px 1px at 70% 61%, rgba(255,255,255,0.4), transparent),
+    radial-gradient(1px 1px at 74% 14%, rgba(255,255,255,0.6), transparent),
+    radial-gradient(1px 1px at 77% 82%, rgba(255,255,255,0.5), transparent),
+    radial-gradient(1px 1px at 81% 37%, rgba(255,255,255,0.4), transparent),
+    radial-gradient(1px 1px at 85% 68%, rgba(255,255,255,0.6), transparent),
+    radial-gradient(1px 1px at 89% 21%, rgba(255,255,255,0.5), transparent),
+    radial-gradient(1px 1px at 93% 54%, rgba(255,255,255,0.4), transparent),
+    radial-gradient(1px 1px at 97% 76%, rgba(255,255,255,0.6), transparent),
+
+    /* ⭐ средние звёзды — редко */
+    radial-gradient(2px 2px at 17% 58%, rgba(255,255,255,0.9), transparent),
+    radial-gradient(2px 2px at 29% 24%, rgba(255,255,255,0.85), transparent),
+    radial-gradient(2px 2px at 41% 44%, rgba(255,255,255,0.9), transparent),
+    radial-gradient(2px 2px at 53% 70%, rgba(255,255,255,0.85), transparent),
+    radial-gradient(2px 2px at 65% 17%, rgba(255,255,255,0.9), transparent),
+    radial-gradient(2px 2px at 76% 49%, rgba(255,255,255,0.85), transparent),
+    radial-gradient(2px 2px at 88% 63%, rgba(255,255,255,0.9), transparent),
+
+    /* ✨ редкие яркие акценты */
+    radial-gradient(3px 3px at 34% 38%, rgba(255,255,255,0.95), transparent),
+    radial-gradient(3px 3px at 72% 29%, rgba(255,255,255,0.95), transparent);
+
+  background-repeat: no-repeat;
 }

@@ -1,52 +1,51 @@
-import { useAnimationFrame } from 'framer-motion';
-import { useMemo, useState } from 'react';
-import assets from '../../../assets/assets';
-import './OrbitScene.css';
+import { useAnimationFrame } from "framer-motion";
+import { useMemo, useState } from "react";
+import assets from "../../../assets/assets";
+import "./OrbitScene.css";
+import "../../../App.css";
 
 export default function OrbitScene() {
   const START_ANGLE = -Math.PI / 2;
   const FULL_CIRCLE = Math.PI * 2;
+
+  // 🔑 ЕДИНЫЙ ИСТОЧНИК РАЗМЕРОВ
+  const SUN_SIZE = 200;
+  const EARTH_SIZE = 60; // было 90 → уменьшили на 30
 
   const [scene, setScene] = useState(0);
   const [sceneTime, setSceneTime] = useState(0);
   const [angle, setAngle] = useState(START_ANGLE);
   const [trail, setTrail] = useState([]);
   const [finished, setFinished] = useState(false);
-  const [blackout, setBlackout] = useState(false); // ⬅️ ЧЁРНЫЙ ЭКРАН
+  const [blackout, setBlackout] = useState(false);
 
   const centerX = window.innerWidth / 2;
   const centerY = window.innerHeight / 2;
   const RADIUS = 220;
 
   useAnimationFrame((_, delta) => {
-    // если уже полностью всё закончили — ничего не делаем
     if (blackout && sceneTime > 1000) return;
 
-    setSceneTime(t => t + delta);
+    setSceneTime((t) => t + delta);
 
-    // сцена появления
     if (scene === 0 && sceneTime > 800) {
       setScene(1);
       setSceneTime(0);
     }
 
-    // старт орбиты
     if (scene === 1 && sceneTime > 600) {
       setScene(2);
       setSceneTime(0);
     }
 
-    // орбитальное движение
     if (scene === 2 && !finished) {
-      setAngle(prev => {
+      setAngle((prev) => {
         const next = prev + 0.025;
+        setTrail((t) => [...t, { angle: next }]);
 
-        setTrail(t => [...t, { angle: next }]);
-
-        // полный круг завершён
         if (next >= START_ANGLE + FULL_CIRCLE) {
           setFinished(true);
-          setScene(3);       // сцена стопа
+          setScene(3);
           setSceneTime(0);
           return START_ANGLE + FULL_CIRCLE;
         }
@@ -55,7 +54,6 @@ export default function OrbitScene() {
       });
     }
 
-    // сцена стопа → включаем blackout
     if (scene === 3 && sceneTime > 300) {
       setBlackout(true);
       setScene(4);
@@ -63,76 +61,68 @@ export default function OrbitScene() {
     }
   });
 
-  // позиция Земли
-  const earthPos = useMemo(() => ({
-    x: centerX + RADIUS * Math.cos(angle),
-    y: centerY + RADIUS * Math.sin(angle),
-  }), [angle, centerX, centerY]);
+  // 🌍 позиция центра Земли
+  const earthPos = useMemo(
+    () => ({
+      x: centerX + RADIUS * Math.cos(angle),
+      y: centerY + RADIUS * Math.sin(angle),
+    }),
+    [angle, centerX, centerY]
+  );
 
-  // вращение Земли — замирает
-  const earthRotation = finished
-    ? 360
-    : angle * 180 / Math.PI * 2;
+  const earthRotation = finished ? 360 : (angle * 180) / Math.PI * 2;
 
   return (
     <div className="orbit-scene">
-      {/* SUN */}
+      {/* ☀️ SUN */}
       {!blackout && (
         <img
           src={assets.sun}
           alt="Sun"
           className="sun"
           style={{
-            left: centerX - 70,
-            top: centerY - 70,
+            width: SUN_SIZE,
+            height: SUN_SIZE,
+            left: centerX - SUN_SIZE / 2,
+            top: centerY - SUN_SIZE / 2,
           }}
         />
       )}
 
-      {/* TRAIL */}
-      {!blackout && trail.map((p, i) => {
-        const x = centerX + RADIUS * Math.cos(p.angle);
-        const y = centerY + RADIUS * Math.sin(p.angle);
-        const visible = Math.floor(i / 5) % 2 === 0;
+      {/* 🌌 TRAIL */}
+      {!blackout &&
+        trail.map((p, i) => {
+          const x = centerX + RADIUS * Math.cos(p.angle);
+          const y = centerY + RADIUS * Math.sin(p.angle);
+          const visible = Math.floor(i / 5) % 2 === 0;
 
-        return (
-          <div
-            key={i}
-            className={`trail-dot ${visible ? 'on' : 'off'}`}
-            style={{ left: x, top: y }}
-          />
-        );
-      })}
+          return (
+            <div
+              key={i}
+              className={`trail-dot ${visible ? "on" : "off"}`}
+              style={{ left: x, top: y }}
+            />
+          );
+        })}
 
-      {/* EARTH */}
+      {/* 🌍 EARTH */}
       {!blackout && scene >= 1 && (
         <img
           src={assets.earth}
           alt="Earth"
           className="earth"
           style={{
-            left: earthPos.x - 35,
-            top: earthPos.y - 35,
+            width: EARTH_SIZE,
+            height: EARTH_SIZE,
+            left: earthPos.x - EARTH_SIZE / 2,
+            top: earthPos.y - EARTH_SIZE / 2,
             transform: `rotate(${earthRotation}deg)`,
           }}
         />
       )}
 
-      {/* BLACKOUT OVERLAY */}
+      {/* 🌑 BLACKOUT */}
       {blackout && <div className="blackout" />}
     </div>
   );
 }
- 
-/**
- * SCENE 1 — OrbitScene
- *
- * Отвечает за вступительную сцену:
- * – Солнце в центре
- * – Земля вращается по орбите
- * – Может рисоваться пунктир орбиты
- *
- * Назначение:
- * Показать космическое движение и начало года.
- * Без сезонов, месяцев и чисел.
- */
