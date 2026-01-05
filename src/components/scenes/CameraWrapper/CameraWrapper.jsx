@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import assets from '../../../assets/assets';
 import "../../../styles/earthStage.css";
 import './CameraWrapper.css';
+import "../../../App.css";
 
 export default function CameraWrapper() {
   const [zoom, setZoom] = useState(false);
