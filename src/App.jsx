@@ -1,56 +1,102 @@
 import "./App.css";
-
 import { useState } from "react";
 import { useSceneTimeline } from "./hooks/useSceneTimeline";
 
+// 🧩 сцены
 import OrbitScene from "./components/scenes/OrbitScene/OrbitScene";
+import Scene2YearCircle from "./components/scenes/Scene2YearCircle/Scene2YearCircle";
 import CameraWrapper from "./components/scenes/CameraWrapper/CameraWrapper";
 import SeasonsScene from "./components/scenes/SeasonsScene/SeasonsScene";
 import SeasonToMonthsStage from "./components/scenes/SeasonToMonthsStage/SeasonToMonthsStage";
 
+// 📊 данные
 import questionData from "./mock/question-786.json";
 
-/**
- * СЦЕНЫ:
- * 0 — орбита
- * 1 — зум
- * 2–3 — сезоны
- * 6 — сезон → его месяцы
- *
- * ❌ УБРАНА СЦЕНА:
- * 4 — деление года (белое кольцо)
- */
+// 🎛 MUI
+import { Button, Stack, Paper } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+
 function App() {
-  const autoStage = useSceneTimeline([7300, 2000]);
+  // ⏱ авто — только для первой сцены
+  const autoStage = useSceneTimeline([7300]);
+
+  // 🎮 ручное управление
   const [manualStage, setManualStage] = useState(null);
 
   const stage = manualStage !== null ? manualStage : autoStage;
   const monthsData = questionData.question;
 
+  // 🔢 всего сцен
+  const MAX_STAGE = 4;
+
+  const goNext = () => {
+    setManualStage(s => (s === null ? autoStage + 1 : Math.min(s + 1, MAX_STAGE)));
+  };
+
+  const goBack = () => {
+    setManualStage(s => (s === null ? 0 : Math.max(s - 1, 0)));
+  };
+
   return (
     <div className="scene">
-      {/* 🟢 СЦЕНА 0 — Орбита */}
+      {/* 🟢 0 — Орбита */}
       {stage === 0 && <OrbitScene />}
 
-      {/* 🟢 СЦЕНА 1 — Зум */}
-      {stage === 1 && <CameraWrapper />}
+      {/* 🟢 1 — Год по орбите */}
+      {stage === 1 && (
+        <Scene2YearCircle onComplete={() => setManualStage(2)} />
+      )}
 
-      {/* 🟢 СЦЕНА 2–3 — Сезоны */}
-      {stage >= 2 && stage < 4 && (
+      {/* 🟢 2 — Зум */}
+      {stage === 2 && <CameraWrapper />}
+
+      {/* 🟢 3 — Сезоны */}
+      {stage === 3 && (
         <SeasonsScene
           data={monthsData}
-          onComplete={() => setManualStage(6)} // ⬅️ сразу в сцену месяцев
+          onComplete={() => setManualStage(4)}
         />
       )}
 
-      {/* 🟢 СЦЕНА 6 — Сезон → месяцы */}
-      {stage === 6 && (
-        <SeasonToMonthsStage
-          onComplete={() => {
-            console.log("Season → months complete");
-          }}
-        />
-      )}
+      {/* 🟢 4 — Сезон → месяцы */}
+      {stage === 4 && <SeasonToMonthsStage />}
+
+      {/* 🎛 DEV-КОНТРОЛЛЕР СЦЕН */}
+      <Paper
+        elevation={6}
+        sx={{
+          position: "fixed",
+          right: 20,
+          bottom: 20,
+          padding: "10px 12px",
+          background: "rgba(0,0,0,0.6)",
+          backdropFilter: "blur(6px)",
+          zIndex: 9999,
+        }}
+      >
+        <Stack direction="row" spacing={1}>
+          <Button
+            variant="contained"
+            size="small"
+            startIcon={<ArrowBackIcon />}
+            onClick={goBack}
+            disabled={stage === 0}
+          >
+            Back
+          </Button>
+
+          <Button
+            variant="contained"
+            size="small"
+            endIcon={<ArrowForwardIcon />}
+            onClick={goNext}
+            disabled={stage === MAX_STAGE}
+          >
+            Next
+          </Button>
+        </Stack>
+      </Paper>
     </div>
   );
 }

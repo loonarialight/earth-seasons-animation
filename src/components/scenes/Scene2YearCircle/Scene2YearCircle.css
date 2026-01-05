@@ -1,0 +1,69 @@
+/* используем ту же базу, что и OrbitScene */
+.scene2-orbit {
+  position: absolute;
+  border: 2px dashed rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  z-index: 1;
+}
+
+/* 🔵 МЕСЯЦ → УВЕЛИЧЕННЫЙ КРУЖОК */
+.scene2-month {
+  position: absolute;
+
+  /* 🔥 больше обычного кружка */
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+
+  background: #4db5ff;
+  color: white;
+  font-weight: 700;
+  font-size: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transform: translate(-50%, -50%) scale(0.6);
+  opacity: 0;
+
+  animation: popIn 0.35s ease forwards;
+  z-index: 3;
+}
+
+/* 🎭 МАСКА — СЪЕДАЕТ ВНУТРЕННЮЮ ЧАСТЬ КРУЖКОВ */
+.scene2-mask {
+  position: absolute;
+  border-radius: 50%;
+
+  /* ⚠️ ЦВЕТ ФОНА СЦЕНЫ */
+  background: #1a0e51;
+
+  z-index: 4;
+  
+}
+
+/* анимация появления */
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+/* ☀️ SUN */
+.sun {
+  position: absolute;
+  z-index: 10;
+  filter: drop-shadow(0 0 30px rgba(255, 230, 120, 0.85));
+}
+.month-label {
+  display: block;
+  font-weight: 700;
+  font-size: 20px;
+  color: white;
+  pointer-events: none;
+}
