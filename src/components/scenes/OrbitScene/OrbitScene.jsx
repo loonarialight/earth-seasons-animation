@@ -7,8 +7,7 @@ import "../../../App.css";
 export default function OrbitScene({ onComplete }) {
   const START_ANGLE = -Math.PI / 2;
   const FULL_CIRCLE = Math.PI * 2;
-  const CENTER_Y_OFFSET = 40; // ⬅️ подбирай: 30–80
-
+  const CENTER_Y_OFFSET = 40;
 
   // 🔑 размеры
   const SUN_SIZE = 200;
@@ -18,14 +17,13 @@ export default function OrbitScene({ onComplete }) {
   // ⏱ тайминги (мс)
   const APPEAR_TIME = 800;
   const START_MOVE_TIME = 600;
-  const YEAR_HOLD_TIME = 2000; // ✅ 7–8 секунд
+  const YEAR_HOLD_TIME = 2000;
 
   const [scene, setScene] = useState(0);
   const [sceneTime, setSceneTime] = useState(0);
   const [angle, setAngle] = useState(START_ANGLE);
   const [trail, setTrail] = useState([]);
   const [finished, setFinished] = useState(false);
-  const [blackout, setBlackout] = useState(false);
   const [showYearLabel, setShowYearLabel] = useState(false);
 
   const centerX = window.innerWidth / 2;
@@ -58,9 +56,9 @@ export default function OrbitScene({ onComplete }) {
         // 🔁 полный оборот
         if (next >= START_ANGLE + FULL_CIRCLE) {
           setFinished(true);
-          setShowYearLabel(true); // показываем «1 ГОД»
+          setShowYearLabel(true);
           setScene(3);
-          setSceneTime(0); // ⏱ старт удержания
+          setSceneTime(0);
           return START_ANGLE + FULL_CIRCLE;
         }
 
@@ -70,13 +68,12 @@ export default function OrbitScene({ onComplete }) {
 
     // 🕒 удержание «1 ГОД» → завершение сцены
     if (scene === 3 && sceneTime > YEAR_HOLD_TIME) {
-      setBlackout(true);
       setScene(4);
-      onComplete?.(); // 🔑 СООБЩАЕМ App.jsx
+      onComplete?.(); // 🔑 Переход к следующей сцене
     }
   });
 
-  // 🌍 позиция Земли (по центру орбиты)
+  // 🌍 позиция Земли
   const earthPos = useMemo(
     () => ({
       x: centerX + RADIUS * Math.cos(angle),
@@ -85,27 +82,27 @@ export default function OrbitScene({ onComplete }) {
     [angle, centerX, centerY]
   );
 
-  const earthRotation = finished ? 360 : (angle * 180) / Math.PI * 2;
+  const earthRotation = finished
+    ? 360
+    : ((angle * 180) / Math.PI) * 2;
 
   return (
     <div className="orbit-scene">
       {/* ☀️ SUN */}
-      {!blackout && (
-        <img
-          src={assets.sun}
-          alt="Sun"
-          className="sun"
-          style={{
-            width: SUN_SIZE,
-            height: SUN_SIZE,
-            left: centerX - SUN_SIZE / 2,
-            top: centerY - SUN_SIZE / 2,
-          }}
-        />
-      )}
+      <img
+        src={assets.sun}
+        alt="Sun"
+        className="sun"
+        style={{
+          width: SUN_SIZE,
+          height: SUN_SIZE,
+          left: centerX - SUN_SIZE / 2,
+          top: centerY - SUN_SIZE / 2,
+        }}
+      />
 
       {/* 🕒 1 ГОД */}
-      {showYearLabel && !blackout && (
+      {showYearLabel && (
         <div
           className="year-label"
           style={{
@@ -118,23 +115,22 @@ export default function OrbitScene({ onComplete }) {
       )}
 
       {/* 🌌 TRAIL */}
-      {!blackout &&
-        trail.map((p, i) => {
-          const x = centerX + RADIUS * Math.cos(p.angle);
-          const y = centerY + RADIUS * Math.sin(p.angle);
-          const visible = Math.floor(i / 5) % 2 === 0;
+      {trail.map((p, i) => {
+        const x = centerX + RADIUS * Math.cos(p.angle);
+        const y = centerY + RADIUS * Math.sin(p.angle);
+        const visible = Math.floor(i / 5) % 2 === 0;
 
-          return (
-            <div
-              key={i}
-              className={`trail-dot ${visible ? "on" : "off"}`}
-              style={{ left: x, top: y }}
-            />
-          );
-        })}
+        return (
+          <div
+            key={i}
+            className={`trail-dot ${visible ? "on" : "off"}`}
+            style={{ left: x, top: y }}
+          />
+        );
+      })}
 
       {/* 🌍 EARTH */}
-      {!blackout && scene >= 1 && (
+      {scene >= 1 && (
         <img
           src={assets.earth}
           alt="Earth"
@@ -145,13 +141,9 @@ export default function OrbitScene({ onComplete }) {
             left: earthPos.x - EARTH_SIZE / 2,
             top: earthPos.y - EARTH_SIZE / 2,
             transform: `rotate(${earthRotation}deg)`,
-
           }}
         />
       )}
-
-      {/* 🌑 BLACKOUT */}
-      {blackout && <div className="blackout" />}
     </div>
   );
 }

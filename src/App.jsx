@@ -1,10 +1,10 @@
 import "./App.css";
 import { useState } from "react";
-import { useSceneTimeline } from "./hooks/useSceneTimeline";
 
 // 🧩 сцены
 import OrbitScene from "./components/scenes/OrbitScene/OrbitScene";
 import Scene2YearCircle from "./components/scenes/Scene2YearCircle/Scene2YearCircle";
+import Scene3MonthFocus from "./components/scenes/Scene3MonthFocus/Scene3MonthFocus";
 import CameraWrapper from "./components/scenes/CameraWrapper/CameraWrapper";
 import SeasonsScene from "./components/scenes/SeasonsScene/SeasonsScene";
 import SeasonToMonthsStage from "./components/scenes/SeasonToMonthsStage/SeasonToMonthsStage";
@@ -18,51 +18,62 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 function App() {
-  // ⏱ авто — только для первой сцены
-  const autoStage = useSceneTimeline([7300]);
+  const [stage, setStage] = useState(0);
+  const [isFading, setIsFading] = useState(false);
 
-  // 🎮 ручное управление
-  const [manualStage, setManualStage] = useState(null);
-
-  const stage = manualStage !== null ? manualStage : autoStage;
   const monthsData = questionData.question;
+  const MAX_STAGE = 5;
 
-  // 🔢 всего сцен
-  const MAX_STAGE = 4;
+  const changeStage = (nextStage) => {
+    setIsFading(true);
 
-  const goNext = () => {
-    setManualStage(s => (s === null ? autoStage + 1 : Math.min(s + 1, MAX_STAGE)));
+    setTimeout(() => {
+      setStage(nextStage);
+      setIsFading(false);
+    }, 500); // ⏱ длительность fade
   };
 
-  const goBack = () => {
-    setManualStage(s => (s === null ? 0 : Math.max(s - 1, 0)));
-  };
+  const goNext = () =>
+    changeStage(Math.min(stage + 1, MAX_STAGE));
+
+  const goBack = () =>
+    changeStage(Math.max(stage - 1, 0));
 
   return (
     <div className="scene">
       {/* 🟢 0 — Орбита */}
-      {stage === 0 && <OrbitScene />}
+      {stage === 0 && <OrbitScene onComplete={() => changeStage(1)} />}
 
-      {/* 🟢 1 — Год по орбите */}
+      {/* 🟢 1 — 1 год */}
       {stage === 1 && (
-        <Scene2YearCircle onComplete={() => setManualStage(2)} />
+        <Scene2YearCircle onComplete={() => changeStage(2)} />
       )}
 
-      {/* 🟢 2 — Зум */}
-      {stage === 2 && <CameraWrapper />}
+      {/* 🟢 2 — Месяцы */}
+      {stage === 2 && (
+        <Scene3MonthFocus onComplete={() => changeStage(3)} />
+      )}
 
-      {/* 🟢 3 — Сезоны */}
+      {/* 🟢 3 — Зум */}
       {stage === 3 && (
+        <CameraWrapper onComplete={() => changeStage(4)} />
+      )}
+
+      {/* 🟢 4 — Сезоны */}
+      {stage === 4 && (
         <SeasonsScene
           data={monthsData}
-          onComplete={() => setManualStage(4)}
+          onComplete={() => changeStage(5)}
         />
       )}
 
-      {/* 🟢 4 — Сезон → месяцы */}
-      {stage === 4 && <SeasonToMonthsStage />}
+      {/* 🟢 5 — Сезоны → месяцы */}
+      {stage === 5 && <SeasonToMonthsStage />}
 
-      {/* 🎛 DEV-КОНТРОЛЛЕР СЦЕН */}
+      {/* 🌫 FADE OVERLAY */}
+      <div className={`fade-overlay ${isFading ? "active" : ""}`} />
+
+      {/* 🎛 DEV-контроллер */}
       <Paper
         elevation={6}
         sx={{

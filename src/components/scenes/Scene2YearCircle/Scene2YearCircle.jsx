@@ -6,12 +6,11 @@ import "../../../App.css";
 
 const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1);
 
-// 🎨 цвета сезонов
 const SEASON_COLORS = {
-  winter: "#4DB5FF", // 12,1,2
-  spring: "#3CB44B", // 3,4,5
-  summer: "#FF5A5A", // 6,7,8
-  autumn: "#FFA726", // 9,10,11
+  winter: "#4DB5FF",
+  spring: "#3CB44B",
+  summer: "#FF5A5A",
+  autumn: "#FFA726",
 };
 
 function getSeason(month) {
@@ -26,37 +25,43 @@ export default function Scene2YearCircle({ onComplete }) {
 
   const SUN_SIZE = 200;
   const RADIUS = 200;
+  const NUMBER_RADIUS = 220;
 
   const CENTER_X = window.innerWidth / 2;
   const CENTER_Y = window.innerHeight / 2 + CENTER_Y_OFFSET;
-  const LABEL_RADIUS = RADIUS;
 
   const SEGMENT = (Math.PI * 2) / 12;
-
-  // 🔑 ВАЖНО: старт С ПОЛОВИНЫ сегмента
   const START_ANGLE = -Math.PI / 2 + SEGMENT / 2;
 
-  const [visibleCount, setVisibleCount] = useState(0);
+  const [visiblePetals, setVisiblePetals] = useState(0);
+  const [visibleNumbers, setVisibleNumbers] = useState(0);
+
   const playPop = usePopSound(0.35);
 
   const MONTH_DELAY = 380;
+  const NUMBER_DELAY = 140;
   const HOLD_TIME = 2000;
 
   useEffect(() => {
-    if (visibleCount >= 12) {
+    if (visiblePetals >= 12) {
       const hold = setTimeout(() => {
         onComplete?.();
       }, HOLD_TIME);
       return () => clearTimeout(hold);
     }
 
-    const t = setTimeout(() => {
-      setVisibleCount(v => v + 1);
+    const petalTimer = setTimeout(() => {
+      setVisiblePetals((v) => v + 1);
       playPop();
+
+      // 🔢 цифра появляется ПОСЛЕ лепестка
+      setTimeout(() => {
+        setVisibleNumbers((n) => n + 1);
+      }, NUMBER_DELAY);
     }, MONTH_DELAY);
 
-    return () => clearTimeout(t);
-  }, [visibleCount, playPop, onComplete]);
+    return () => clearTimeout(petalTimer);
+  }, [visiblePetals, playPop, onComplete]);
 
   return (
     <div className="orbit-scene">
@@ -79,8 +84,6 @@ export default function Scene2YearCircle({ onComplete }) {
         style={{
           left: CENTER_X,
           top: CENTER_Y - RADIUS - 100,
-          opacity: 1,
-          animation: "none",
         }}
       >
         1 ГОД
@@ -97,21 +100,36 @@ export default function Scene2YearCircle({ onComplete }) {
         }}
       />
 
-      {/* 🔵 МЕСЯЦЫ */}
-      {MONTHS.slice(0, visibleCount).map((month, i) => {
+      {/* 🌿 ЛЕПЕСТКИ */}
+      {MONTHS.slice(0, visiblePetals).map((month, i) => {
         const angle = START_ANGLE + i * SEGMENT;
-        const x = CENTER_X + LABEL_RADIUS * Math.cos(angle);
-        const y = CENTER_Y + LABEL_RADIUS * Math.sin(angle);
+        const x = CENTER_X + RADIUS * Math.cos(angle);
+        const y = CENTER_Y + RADIUS * Math.sin(angle);
 
         return (
           <div
-            key={month}
+            key={`petal-${month}`}
             className="scene2-month"
             style={{
               left: x,
               top: y,
               backgroundColor: SEASON_COLORS[getSeason(month)],
             }}
+          />
+        );
+      })}
+
+      {/* 🔢 ЦИФРЫ (ПОСЛЕ ЛЕПЕСТКОВ) */}
+      {MONTHS.slice(0, visibleNumbers).map((month, i) => {
+        const angle = START_ANGLE + i * SEGMENT;
+        const x = CENTER_X + NUMBER_RADIUS * Math.cos(angle);
+        const y = CENTER_Y + NUMBER_RADIUS * Math.sin(angle);
+
+        return (
+          <div
+            key={`number-${month}`}
+            className="scene2-month-number"
+            style={{ left: x, top: y }}
           >
             {month}
           </div>

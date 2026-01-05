@@ -48,3 +48,16 @@
   background-repeat: no-repeat;
 
 }
+.fade-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+  z-index: 9998;
+}
+
+.fade-overlay.active {
+  opacity: 1;
+}

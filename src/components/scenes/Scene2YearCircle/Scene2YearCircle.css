@@ -11,8 +11,8 @@
   position: absolute;
 
   /* 🔥 больше обычного кружка */
-  width: 90px;
-  height: 90px;
+  width: 103px;
+  height: 103px;
   border-radius: 50%;
 
   background: #4db5ff;
@@ -34,6 +34,7 @@
 /* 🎭 МАСКА — СЪЕДАЕТ ВНУТРЕННЮЮ ЧАСТЬ КРУЖКОВ */
 .scene2-mask {
   position: absolute;
+  align-items: center;
   border-radius: 50%;
 
   /* ⚠️ ЦВЕТ ФОНА СЦЕНЫ */
@@ -65,5 +66,20 @@
   font-weight: 700;
   font-size: 20px;
   color: white;
+  pointer-events: none;
+}
+.scene2-month {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+}
+
+.scene2-month-number {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-size: 20px;
+  font-weight: 700;
+  color: white;
+  z-index: 20;
   pointer-events: none;
 }
