@@ -6,28 +6,28 @@
   justify-content: center;
 }
 
-/* 🧱 общий контейнер сцены */
+/* 🧱 контейнер сцены */
 .scene-wrapper {
   position: relative;
   width: 420px;
   height: 420px;
 }
 
-/* 🌈 SVG слои */
+/* 🌈 ВСЕ SVG — слои */
 .scene-wrapper svg {
   position: absolute;
   inset: 0;
 }
 
-/* кольцо */
+/* 🔵 кольцо сезонов */
 .season-ring {
   z-index: 1;
 }
 
-/* 🌳 СЕЗОНЫ (картинки) */
+/* 🌳 фон сезона */
 .season-image {
   position: absolute;
-  inset: 50px;            /* 👈 ЦЕНТР */
+  inset: 50px;
   border-radius: 50%;
   background-size: cover;
   background-position: center;
@@ -37,15 +37,16 @@
   animation: seasonFadeIn 0.8s ease forwards;
 
   z-index: 2;
-  pointer-events: none;  /* 🔑 НЕ ПЕРЕКРЫВАЕТ */
+  pointer-events: none;
 }
 
-/* 🔢 МЕСЯЦЫ */
-.month-number-label {
-  z-index: 3;
-  pointer-events: none;  /* 🔑 */
+/* 🔴 ВСЕ ТЕКСТЫ (цифры + месяцы) */
+.month-numbers {
+  z-index: 5;
+  pointer-events: none;
 }
 
+/* ===== АНИМАЦИИ ===== */
 @keyframes seasonFadeIn {
   to {
     opacity: 1;

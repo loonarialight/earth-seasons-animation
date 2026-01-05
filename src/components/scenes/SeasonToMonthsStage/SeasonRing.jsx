@@ -18,7 +18,13 @@ export default function SeasonRing({ activeIndex }) {
   };
 
   return (
-    <svg className="season-ring" width="420" height="420" viewBox="0 0 420 420">
+    <svg
+      className="season-ring"
+      width="420"
+      height="420"
+      viewBox="0 0 420 420"
+      pointerEvents="none"   // 👈 ВАЖНО
+    >
       {SEGMENTS.map(seg => {
         if (seg.index > activeIndex) return null;
 
@@ -44,6 +50,7 @@ export default function SeasonRing({ activeIndex }) {
               fill="none"
               stroke={seg.color}
               strokeWidth={STROKE}
+              strokeLinecap="butt"   // 👈 ЧЁТКИЙ КРАЙ, НЕ ЗАЛЕЗАЕТ
             />
             <line
               x1={p1.x}
