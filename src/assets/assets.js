@@ -11,6 +11,7 @@ import s2 from './s2.png';
 import s3 from './s3.png';
 import s4 from './s4.png';
 import popSound from './pop.mp3';
+import magic from './magic.mp3';
 
 
 const assets = {
@@ -28,6 +29,7 @@ const assets = {
     s3,
     s4,
     popSound,
+    magic,
 
 
 };  

@@ -34,23 +34,21 @@ function getSeason(month) {
 }
 
 export default function Scene4SeasonRays() {
-  const CENTER_Y_OFFSET = 0;
-  const SEASON_OUTER_RADIUS = 170; // ← меньше, чем RADIUS (200)
-
-
   const SUN_SIZE = 200;
   const RADIUS = 200;
   const LABEL_RADIUS = 215;
   const TEXT_ARC = 28;
 
   const CENTER_X = window.innerWidth / 2;
-  const CENTER_Y = window.innerHeight / 2 + CENTER_Y_OFFSET;
+  const CENTER_Y = window.innerHeight / 2;
 
   const SEGMENT = (Math.PI * 2) / 12;
   const START_ANGLE = -Math.PI / 2 + SEGMENT / 2;
 
-  const [activeIndex, setActiveIndex] = useState(0);
+  // 🔑 ВАЖНО: стартуем с -1
+  const [activeIndex, setActiveIndex] = useState(-1);
 
+  /* ▶️ таймлайн сезонов */
   useEffect(() => {
     if (activeIndex >= SEASONS.length - 1) return;
 
@@ -61,7 +59,19 @@ export default function Scene4SeasonRays() {
     return () => clearTimeout(t);
   }, [activeIndex]);
 
-  const activeSeason = SEASONS[activeIndex];
+  /* 🔮 MAGIC SOUND — теперь и ЗИМА */
+  useEffect(() => {
+    if (activeIndex < 0) return; // ⛔ только самый первый кадр
+
+    const magic = new Audio(assets.magic);
+    magic.volume = 0.35;
+    magic.play();
+
+    return () => {
+      magic.pause();
+      magic.currentTime = 0;
+    };
+  }, [activeIndex]);
 
   return (
     <div className="orbit-scene">
@@ -83,12 +93,7 @@ export default function Scene4SeasonRays() {
       })}
 
       {/* 📝 НАЗВАНИЯ МЕСЯЦЕВ */}
-      <svg
-        width="100%"
-        height="100%"
-        className="month-labels"
-        style={{ position: "absolute", inset: 0 }}
-      >
+      <svg width="100%" height="100%" className="month-labels">
         {MONTH_NAMES.map((name, i) => {
           const angle = START_ANGLE + i * SEGMENT;
           const startDeg = (angle * 180) / Math.PI - TEXT_ARC / 2;
@@ -132,20 +137,11 @@ export default function Scene4SeasonRays() {
         }}
       />
 
-      {/* 🏷 НАЗВАНИЕ СЕЗОНА — ПО ДУГЕ */}
-      <svg
-        width="100%"
-        height="100%"
-        style={{
-          position: "absolute",
-          inset: 0,
-          pointerEvents: "none",
-          zIndex: 40,
-        }}
-      >
-        {(() => {
-          const midDeg = (activeSeason.start + activeSeason.end) / 2;
-          const ARC_SPAN = 48;          // ✅ ИСПРАВЛЕНО
+      {/* 🏷 НАЗВАНИЯ СЕЗОНОВ */}
+      <svg width="100%" height="100%" style={{ position: "absolute", inset: 0, zIndex: 40 }}>
+        {SEASONS.slice(0, activeIndex + 1).map((season) => {
+          const midDeg = (season.start + season.end) / 2;
+          const ARC_SPAN = 48;
           const r = RADIUS - 60;
 
           const startDeg = midDeg - ARC_SPAN / 2;
@@ -156,35 +152,23 @@ export default function Scene4SeasonRays() {
           const x2 = CENTER_X + r * Math.cos((endDeg * Math.PI) / 180);
           const y2 = CENTER_Y + r * Math.sin((endDeg * Math.PI) / 180);
 
-          const pathId = `season-path-${activeSeason.key}`;
+          const pathId = `season-path-${season.key}`;
 
           return (
-            <>
+            <g key={season.key}>
               <path
                 id={pathId}
                 d={`M ${x1} ${y1} A ${r} ${r} 0 0 1 ${x2} ${y2}`}
                 fill="none"
               />
-              <text
-                fill="white"
-                fontSize="34"
-                fontWeight="800"
-                letterSpacing="4"
-                dy="-2"
-              >
-                <textPath
-                  href={`#${pathId}`}
-                  startOffset="50%"
-                  textAnchor="middle"
-                  textLength={ARC_SPAN * 3.6}
-                  lengthAdjust="spacing"
-                >
-                  {activeSeason.title}
+              <text fill="white" fontSize="34" fontWeight="800" letterSpacing="4">
+                <textPath href={`#${pathId}`} startOffset="50%" textAnchor="middle">
+                  {season.title}
                 </textPath>
               </text>
-            </>
+            </g>
           );
-        })()}
+        })}
       </svg>
 
       {/* ❄️ СЕЗОННЫЕ ДУГИ */}
@@ -199,7 +183,6 @@ export default function Scene4SeasonRays() {
             position: "absolute",
             left: CENTER_X - RADIUS,
             top: CENTER_Y - RADIUS,
-            pointerEvents: "none",
           }}
         >
           <g>
@@ -213,6 +196,7 @@ export default function Scene4SeasonRays() {
               return (
                 <line
                   key={i}
+                  className="season-ray"
                   x1={RADIUS + (SUN_SIZE / 2) * Math.cos(angle)}
                   y1={RADIUS + (SUN_SIZE / 2) * Math.sin(angle)}
                   x2={RADIUS + RADIUS * Math.cos(angle)}
@@ -220,6 +204,9 @@ export default function Scene4SeasonRays() {
                   stroke={SEASON_COLORS[season.key]}
                   strokeWidth="6"
                   strokeLinecap="round"
+                  style={{
+                    animationDelay: `${Math.floor(i / 12) * 40}ms`,
+                  }}
                 />
               );
             })}
