@@ -17,6 +17,13 @@ const SEASON_COLORS = {
   autumn: "#FFA726",
 };
 
+const SEASON_COLORS_LIGHT = {
+  winter: "#83bae2ff",
+  spring: "#59b865ff",
+  summer: "#e76969ff",
+  autumn: "#f2b860ff",
+};
+
 const SEASONS = [
   { key: "winter", title: "ЗИМА", start: -120, end: -30 },
   { key: "spring", title: "ВЕСНА", start: -30, end: 60 },
@@ -35,9 +42,12 @@ function getSeason(month) {
 
 export default function Scene4SeasonRays() {
   const SUN_SIZE = 200;
-  const RADIUS = 200;
+  const RADIUS = 200;                 // базовый радиус (месяцы, центр)
   const LABEL_RADIUS = 215;
   const TEXT_ARC = 28;
+
+  // 🔥 ВАЖНО: отдельный радиус ТОЛЬКО для сезонных дуг
+  const SEASON_RING_RADIUS = RADIUS + 120; // чтобы дуги были сдвинуты наружу
 
   const CENTER_X = window.innerWidth / 2;
   const CENTER_Y = window.innerHeight / 2;
@@ -45,28 +55,21 @@ export default function Scene4SeasonRays() {
   const SEGMENT = (Math.PI * 2) / 12;
   const START_ANGLE = -Math.PI / 2 + SEGMENT / 2;
 
-  // 🔑 ВАЖНО: стартуем с -1
   const [activeIndex, setActiveIndex] = useState(-1);
 
   /* ▶️ таймлайн сезонов */
   useEffect(() => {
     if (activeIndex >= SEASONS.length - 1) return;
-
-    const t = setTimeout(() => {
-      setActiveIndex(i => i + 1);
-    }, 2600);
-
+    const t = setTimeout(() => setActiveIndex(i => i + 1), 2600);
     return () => clearTimeout(t);
   }, [activeIndex]);
 
-  /* 🔮 MAGIC SOUND — теперь и ЗИМА */
+  /* 🔮 MAGIC SOUND */
   useEffect(() => {
-    if (activeIndex < 0) return; // ⛔ только самый первый кадр
-
+    if (activeIndex < 0) return;
     const magic = new Audio(assets.magic);
     magic.volume = 0.35;
     magic.play();
-
     return () => {
       magic.pause();
       magic.currentTime = 0;
@@ -141,8 +144,8 @@ export default function Scene4SeasonRays() {
       <svg width="100%" height="100%" style={{ position: "absolute", inset: 0, zIndex: 40 }}>
         {SEASONS.slice(0, activeIndex + 1).map((season) => {
           const midDeg = (season.start + season.end) / 2;
-          const ARC_SPAN = 48;
-          const r = RADIUS - 60;
+          const ARC_SPAN = 68;
+          const r = RADIUS +60;
 
           const startDeg = midDeg - ARC_SPAN / 2;
           const endDeg = midDeg + ARC_SPAN / 2;
@@ -171,18 +174,18 @@ export default function Scene4SeasonRays() {
         })}
       </svg>
 
-      {/* ❄️ СЕЗОННЫЕ ДУГИ */}
+      {/* ❄️ СЕЗОННЫЕ ДУГИ — СДВИНУТЫ НАРУЖУ */}
       {SEASONS.slice(0, activeIndex + 1).map((season) => (
         <svg
           key={season.key}
           className="season-rays"
-          width={RADIUS * 2}
-          height={RADIUS * 2}
-          viewBox={`0 0 ${RADIUS * 2} ${RADIUS * 2}`}
+          width={SEASON_RING_RADIUS * 2}
+          height={SEASON_RING_RADIUS * 2}
+          viewBox={`0 0 ${SEASON_RING_RADIUS * 2} ${SEASON_RING_RADIUS * 2}`}
           style={{
             position: "absolute",
-            left: CENTER_X - RADIUS,
-            top: CENTER_Y - RADIUS,
+            left: CENTER_X - SEASON_RING_RADIUS,
+            top: CENTER_Y - SEASON_RING_RADIUS,
           }}
         >
           <g>
@@ -193,15 +196,18 @@ export default function Scene4SeasonRays() {
                 (startDeg + (i / 260) * (endDeg - startDeg)) *
                 (Math.PI / 180);
 
+              const INNER_RADIUS = SEASON_RING_RADIUS - 140;
+              const OUTER_RADIUS = SEASON_RING_RADIUS - 20;
+
               return (
                 <line
                   key={i}
                   className="season-ray"
-                  x1={RADIUS + (SUN_SIZE / 2) * Math.cos(angle)}
-                  y1={RADIUS + (SUN_SIZE / 2) * Math.sin(angle)}
-                  x2={RADIUS + RADIUS * Math.cos(angle)}
-                  y2={RADIUS + RADIUS * Math.sin(angle)}
-                  stroke={SEASON_COLORS[season.key]}
+                  x1={SEASON_RING_RADIUS + INNER_RADIUS * Math.cos(angle)}
+                  y1={SEASON_RING_RADIUS + INNER_RADIUS * Math.sin(angle)}
+                  x2={SEASON_RING_RADIUS + OUTER_RADIUS * Math.cos(angle)}
+                  y2={SEASON_RING_RADIUS + OUTER_RADIUS * Math.sin(angle)}
+                  stroke={SEASON_COLORS_LIGHT[season.key]}
                   strokeWidth="6"
                   strokeLinecap="round"
                   style={{
